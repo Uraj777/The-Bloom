@@ -1,150 +1,93 @@
-# 🌸 The Bloom
+# THE BLOOM
 
-An immersive **HTML5 Canvas-based action game** featuring dynamic combat mechanics, character progression, and strategic gameplay elements.
+**THE BLOOM** is an isometric survival-horror game built with vanilla HTML, CSS, and JavaScript.
 
-## 🎮 Features
+Arjun protects his daughter Anaya while a biological fungal infection spreads from the coast.
 
-- **Interactive Combat System**: Engage in real-time battles with dynamic health management
-- **Multi-character Gameplay**: Play as Arjun with support from Anaya against evolving threats
-- **Infection Mechanic**: Track and manage an infection system that affects gameplay
-- **Boss Battles**: Face challenging boss encounters with unique mechanics
-- **Real-time Score System**: Track your performance and compete for high scores
-- **Dynamic HUD**: Live health bars, character status, and combat feedback
-- **Responsive Canvas Rendering**: Optimized graphics powered by HTML5 Canvas API
+## Run locally
 
-## 🚀 Getting Started
+No npm install or build step is required.
 
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- No installation required - runs directly in browser
+```bash
+python -m http.server 8000
+```
 
-### How to Run
+Open `http://localhost:8000`.
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/cser-utkarsh-raj/The-Bloom.git
-   cd The-Bloom
-   ```
+## Vercel
 
-2. **Open in browser**
-   - Double-click `index.html`, or
-   - Use a local server:
-     ```bash
-     python -m http.server 8000
-     # Then visit http://localhost:8000
-     ```
+- Framework Preset: **Other**
+- Build Command: **empty**
+- Install Command: **empty**
+- Output Directory: **.**
 
-## 📁 Project Structure
+## Structure
 
 ```
 The-Bloom/
-├── index.html           # Main game entry point
-├── js/
-│   ├── game-01.js      # Core game initialization
-│   ├── game-02.js      # Game loop & rendering
-│   ├── game-03.js      # Player mechanics
-│   ├── game-04.js      # Combat system
-│   ├── game-05.js      # Enemy AI & behavior
-│   ├── game-06.js      # Boss encounters
-│   ├── game-07.js      # UI & HUD management
-│   └── game-08.js      # Game state & scoring
+├── index.html
 ├── css/
-│   └── style.css       # Styling & visual effects
-└── README.md           # This file
+│   └── style.css
+├── js/
+│   ├── 01-core.js
+│   ├── 02-rendering.js
+│   ├── 03-level-engine.js
+│   ├── 04-entities.js
+│   ├── 05-game-state.js
+│   ├── 06-ui-flow.js
+│   ├── 07-levels.js
+│   └── 08-main.js
+└── README.md
 ```
 
-## 🎯 Gameplay
+The numbered modules preserve the execution order of the original game source. Do not reorder the script tags in `index.html`.
 
-- **Objective**: Survive encounters with enemies and bosses while managing health and infection
-- **Characters**:
-  - **ARJUN**: Main playable character with health bar
-  - **ANAYA**: Support character tracking status
-  - **INFECTION**: Dynamic threat meter
-  - **BOSS**: Ultimate challenge with unique mechanics
+## Chapters
 
-- **Controls**: [Add your control scheme here - keyboard/mouse inputs]
+1. **HOME DEFENSE**
+2. **THE BLOOM-WIFE**
+3. **THE ROAD**
+4. **SCHOOL SHELTER**
+5. **FINAL ESCAPE**
 
-- **Mechanics**:
-  - Health management across characters
-  - Real-time combat feedback
-  - Infection tracking system
-  - Progressive difficulty
+## Controls
 
-## 🛠️ Technologies Used
+| Input | Action |
+|---|---|
+| WASD / Arrow keys | Move |
+| SPACE | Attack / auto-aim |
+| Mouse click | Attack toward cursor |
+| SHIFT | Sprint |
+| F | Dodge roll |
+| Q | Use medkit |
+| E | Carry / put down Anaya |
+| M | Large map |
+| P / ESC | Pause |
+| H | Toggle help |
 
-- **HTML5 Canvas** - Graphics rendering
-- **Vanilla JavaScript** - Game logic and mechanics
-- **CSS3** - Styling and visual effects
-- **No external dependencies** - Pure browser-based game
+## Core systems
 
-## 📊 Game Statistics
+- Isometric Canvas rendering
+- Procedural textures and lighting
+- Combat, sprint, stamina and dodge roll
+- Infection and antidotes
+- Anaya companion/carry system
+- Drifters, stalkers and bloated infected
+- Maya boss encounter
+- Difficulty modes
+- Safe-room shop
+- Multiple endings
+- Web Audio effects
+- Local chapter progress
 
-- **Language Composition**: 79.1% JavaScript, 20.9% HTML
-- **Modular Code**: 8 organized game modules for maintainability
-- **Optimized Performance**: Canvas-based rendering for smooth gameplay
+## Deployment
 
-## 🎨 Visual Components
+There is no npm dependency tree or compilation step. Every JavaScript module is loaded directly by `index.html`. If Vercel shows a black screen, check the browser console for missing modules or JavaScript runtime errors.
 
-- **Player Canvas Elements**: Individual character portraits (46x46px)
-- **Health Bars**: Color-coded progression indicators
-- **Boss Arena**: Separate canvas overlay for boss encounters
-- **Score Display**: Real-time scoring UI
-- **Combat Feedback**: Visual prompts and banners for game events
+## Author
 
-## 🔧 Development
+**Utkarsh Raj**
 
-### Adding New Features
-1. Extend the modular game files in `/js/`
-2. Update styles in `/css/style.css`
-3. Test in browser with console open (F12)
+## License
 
-### Code Organization
-- Each `game-XX.js` file handles specific functionality
-- Modular design allows easy feature expansion
-- Canvas context shared across game modules
-
-## 📝 TODO / Future Enhancements
-
-- [ ] Add detailed control scheme documentation
-- [ ] Implement difficulty levels
-- [ ] Add sound effects and background music
-- [ ] Create leaderboard system
-- [ ] Add mobile touch controls
-- [ ] Implement save/load game state
-- [ ] Add pause & resume functionality
-- [ ] Create tutorial/help overlay
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is currently unlicensed. [Choose and add a license](https://choosealicense.com/)
-
-## 💡 Tips for Players
-
-- Monitor your infection meter carefully
-- Balance offense and defense
-- Use character abilities strategically
-- Watch for visual feedback cues during combat
-- Aim for high score on every run
-
-## 👥 Author
-
-**Utkarsh Raj** - [@cser-utkarsh-raj](https://github.com/cser-utkarsh-raj)
-
-## 📬 Feedback & Support
-
-Found a bug? Have a suggestion? Please open an [issue](https://github.com/cser-utkarsh-raj/The-Bloom/issues) on GitHub.
-
----
-
-**Happy Gaming! 🎮✨**
-
-*Made with ❤️ using HTML5 Canvas*
+No license has been added yet.
