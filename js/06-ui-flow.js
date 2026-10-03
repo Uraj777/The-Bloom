@@ -20,16 +20,9 @@ function drawScene(g,w,h,type,t){
  else if(type==='bunker'){g.fillStyle='#0a0504';g.fillRect(0,hz,w,h-hz);g.fillStyle='#2a2e30';g.fillRect(w*.4,hz-70,w*.2,70);g.fillStyle='#0c2a1a';g.fillRect(w*.47,hz-50,w*.06,50);
   g.fillStyle=`rgba(255,80,40,${.6+.4*Math.sin(t*6)})`;for(let k=0;k<3;k++)g.fillRect(((t*60+k*w*.35)%w),h*.15+k*20,8,3);}
  for(let i=0;i<46;i++){const x=(r()*w+t*(8+i%5*4))%w,y=h-((r()*h+t*(12+i%7*3))%h);g.fillStyle=`rgba(77,255,160,${.12+.2*Math.sin(t+i)})`;g.beginPath();g.arc(x,y,1+i%3,0,6.3);g.fill();}
- if(type==='menu'){
-  // Keep the title screen restrained: desaturate the old scene art so the
-  // brand carries the visual identity instead of a wall of green.
-  g.save();
-  g.globalCompositeOperation='saturation';
-  g.fillStyle='#808080';
-  g.fillRect(0,0,w,h);
-  g.restore();
- }
-}\nfunction seg(key,opts){return`<div class="so">${opts.map(([v,l])=>`<button class="o ${S[key]===v?'a':''}" onclick="setS('${key}',${typeof v==='string'?`'${v}'`:v})">${l}</button>`).join('')}</div>`;}
+
+}
+function seg(key,opts){return`<div class="so">${opts.map(([v,l])=>`<button class="o ${S[key]===v?'a':''}" onclick="setS('${key}',${typeof v==='string'?`'${v}'`:v})">${l}</button>`).join('')}</div>`;}
 function onoff(key){return seg(key,[[true,'ON'],[false,'OFF']]);}
 function setS(k,v){S[k]=v;saveS();applyTheme();if(k==='volume')setVol();showSettings();}
 let settingsBack='menu';
@@ -66,12 +59,20 @@ function showChapters(){const n=['HOME DEFENSE','THE BLOOM-WIFE','THE ROAD','SCH
  showOv(`<div class="ttl" style="font-size:34px">CHAPTERS</div><div class="sub">COMPLETED CHAPTERS UNLOCK</div>${n.map((x,i)=>`<button class="btn ${i<=unlocked?'':'off'}" onclick="chapter(${i})">${i+1}. ${x}</button>`).join('')}<div class="row"><button class="btn" onclick="showMenu()">← BACK</button></div>`,'menu');}
 function chapter(i){G=newGame();G.level=i;showIntro(i);}
 function showMenu(){settingsBack='menu';state='menu';LV=null;$('hud').style.display='none';applyTheme();
- showOv(`<div class="menu-shell">
- <img class="brand-logo" src="logo.svg" alt="THE BLOOM">
- <div class="sub">SURVIVAL HORROR · BY UTKARSH RAJ</div>
- <button class="btn" onclick="newRun()">▶ NEW GAME</button><button class="btn" onclick="showChapters()">CHAPTERS</button><button class="btn" onclick="settingsBack='menu';showSettings()">⚙ SETTINGS</button><button class="btn" onclick="showControls()">CONTROLS</button>
- <div class="txt" style="font-size:13px;margin-top:22px">"The horror is not the monsters.<br>It is watching the world decay while you try to keep one person safe."</div>
- </div>`,'menu');}
+ showOv(`<div class="menu-bg" aria-hidden="true"><div class="menu-moon"></div><div class="menu-horizon"></div><div class="menu-house"><i></i><b></b><em></em></div><div class="menu-water"></div></div>
+ <div class="menu-shell">
+  <img class="brand-logo" src="logo.svg" alt="THE BLOOM">
+  <div class="menu-rule"></div>
+  <div class="sub">SURVIVAL HORROR · BY UTKARSH RAJ</div>
+  <div class="menu-actions">
+   <button class="btn" onclick="newRun()">NEW GAME</button>
+   <button class="btn" onclick="showChapters()">CHAPTERS</button>
+   <button class="btn" onclick="settingsBack='menu';showSettings()">SETTINGS</button>
+   <button class="btn" onclick="showControls()">CONTROLS</button>
+  </div>
+  <div class="txt menu-quote">"The horror is not the monsters.<br>It is watching the world decay while you try to keep one person safe."</div>
+  <div class="menu-version">THE BLOOM · 2000s SURVIVAL HORROR</div>
+ </div>`);}
 function newRun(){G=newGame();showIntro(0);}
 let introIdx=0;
 function showIntro(i){introIdx=i;state='intro';const I=INTRO[i];$('hud').style.display='none';
