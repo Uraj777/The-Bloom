@@ -116,8 +116,23 @@ class Level{
   for(const f of this.floats){cx.globalAlpha=Math.min(1,f.t*1.5);cx.lineWidth=3;cx.strokeStyle='#000';cx.strokeText(f.txt,isx(f.x,f.y),isy(f.x,f.y,f.z));cx.fillStyle=f.col;cx.fillText(f.txt,isx(f.x,f.y),isy(f.x,f.y,f.z));}cx.globalAlpha=1;
   light(p.x,p.y,1,8,.95);light(p.x+Math.cos(p.f)*3,p.y+Math.sin(p.f)*3,.8,5.5,.55);
   if(G.infect>35)light(p.x,p.y,1,3,.15,'#33ffd0');
+  this.goalArrow(p);
   this.post();
  }
+/* floating chevron toward the objective when it is off-screen — works with minimap OFF too */
+goalArrow(p){
+ if(!this.goal||state!=='play')return;
+ const th=THEMES[S.theme],g=w2s(this.goal.x,this.goal.y,0),m=64;
+ if(g[0]>m&&g[0]<W-m&&g[1]>m&&g[1]<H-m)return;/* on screen already */
+ setScreen();
+ let dx=g[0]-W/2,dy=g[1]-H/2;const dl=Math.hypot(dx,dy)||1;dx/=dl;dy/=dl;
+ /* clamp onto an ellipse just inside the viewport edge */
+ const rx=W/2-58,ry=H/2-58,k=1/Math.hypot(dx/rx,dy/ry);
+ const ex=W/2+dx*k,ey=H/2+dy*k,a=Math.atan2(dy,dx),pu=.75+.25*Math.sin(this.t*4);
+ cx.save();cx.translate(ex,ey);cx.rotate(a);cx.globalAlpha=pu;
+ cx.fillStyle=th.acc;cx.beginPath();cx.moveTo(14,0);cx.lineTo(-8,9);cx.lineTo(-3,0);cx.lineTo(-8,-9);cx.closePath();cx.fill();
+ cx.restore();cx.globalAlpha=1;setWorld();
+}
  post(){
   setScreen();const th=THEMES[S.theme];
   if(S.lighting&&S.gfx!=='low'){

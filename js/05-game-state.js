@@ -38,7 +38,7 @@ function startLevel(i){
  LV=BUILD[i]();state='play';mapBig=false;
  $('ov').style.display='none';$('hud').style.display='block';ovAnim=null;
  portraits();Object.keys(cache).forEach(k=>delete cache[k]);
- $('help').innerHTML=document.body.classList.contains('mobile')?'<b>TOUCH &amp; HOLD</b> move toward your finger &nbsp; <b>TAP</b> attack<br><b>MAP</b> big map &nbsp; <b>II</b> pause &nbsp; <b>H</b> hide help':'<b>WASD / ARROWS</b> move &nbsp; <b>SPACE</b> attack (or click)<br><b>SHIFT</b> sprint &nbsp; <b>F</b> dodge roll &nbsp; <b>Q</b> medkit<br><b>E</b> carry Nancy &nbsp; <b>M</b> map &nbsp; <b>P</b> pause &nbsp; <b>H</b> hide help';
+ $('help').innerHTML=document.body.classList.contains('mobile')?'<b>TOUCH &amp; HOLD</b> move toward your finger &nbsp; <b>TAP</b> attack<br><b>MAP</b> big map &nbsp; <b>II</b> pause &nbsp; <b>H</b> hide help':'<b>WASD / ARROWS</b> move &nbsp; <b>SPACE / CLICK</b> attack (aimed at cursor)<br><b>SHIFT</b> sprint &nbsp; <b>F</b> dodge &nbsp; <b>Q</b> medkit &nbsp; <b>R</b> parry &nbsp; <b>K / right-click</b> heavy<br><b>E</b> carry Nancy &nbsp; <b>M</b> map &nbsp; <b>P</b> pause &nbsp; <b>H</b> hide help';
  helpShown=i===0?12:5;$('help').style.opacity=1;
  banner(INTRO[i].t,THEMES[S.theme].acc);say(INTRO[i].tip,4500);
 }

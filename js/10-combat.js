@@ -8,11 +8,15 @@
    ============================================================ */
 (function(){
  if(typeof Player==='undefined'||typeof Enemy==='undefined'||typeof cv==='undefined'||typeof took!=='function')return;
- const COMBAT={heavyClick:false};
+ /* one-shot aim triggers consumed by Player.update each frame
+    (mouse = desktop, TOUCH = mobile two-finger tap / HEAVY button) */
+ const TRIG=window.TRIG;
+ try{window.TOUCH=window.TOUCH||{x:0,y:0,on:false,click:false,heavy:false};}catch(e){}
  try{
   /* right-click = heavy attack trigger */
-  cv.addEventListener('mousedown',e=>{if(e.button===2){COMBAT.heavyClick=true;COMBAT.heavyMouse=true;}});
+  cv.addEventListener('mousedown',e=>{if(e.button===2){TRIG.mClick=true;TRIG.mHeavy=true;}else if(e.button===0){TRIG.mClick=true;}});
  }catch(e){return;}
+
 
  /* ---------- combo counter + finisher on 3rd hit ---------- */
  try{
@@ -41,7 +45,8 @@
  try{
   Player.prototype.heavy=function(useMouse){
    const lv=this.lv;let ang=this.f;
-   if(useMouse){const w=s2w(mouse.x,mouse.y);ang=Math.atan2(w.y-this.y,w.x-this.x);}
+   if(useMouse){const A=(typeof TOUCH!=='undefined'&&TOUCH.on)?TOUCH:mouse;/* aim at last touch on mobile */
+    const w=s2w(A.x,A.y);ang=Math.atan2(w.y-this.y,w.x-this.x);}
    if(S.assist){let best=null,bd=3.6;for(const e of lv.enemies){if(e.dead||e.dying||(e.type==='boss'&&!e.awake))continue;const d=dst(this.x,this.y,e.x,e.y),a=Math.atan2(e.y-this.y,e.x-this.x);if(d<bd&&(Math.abs(angD(a,ang))<1.5||d<2.4)){bd=d;best=a;}}if(best!==null)ang=best;}
    this.f=ang;this.swA=ang;this.atkT=.85;this.swT=.3;this.stam-=25;this.sd=.6;
    SFX.swing();tone(95,.3,'sawtooth',.22,-40);shake(2);lv.noise(this.x,this.y,9);
@@ -68,17 +73,24 @@
    P.parryT=(P.parryT||0)-dt;P.parryCd=(P.parryCd||0)-dt;
    P.comboT=(P.comboT||0)-dt;if(P.comboT<=0)P.comboN=0;
    const keyH=took('KeyK');
-   const hReq=keyH||COMBAT.heavyClick;
-   const hMouse=!keyH&&!!COMBAT.heavyMouse;
-   COMBAT.heavyClick=false;COMBAT.heavyMouse=false;
+   /* one-shot aim triggers: consumed here (before Player.update reads them) */
+   const tM=TRIG.mClick,tH=TRIG.mHeavy;TRIG.mClick=TRIG.mHeavy=false;
+   let tT=false,tTH=false;if(typeof TOUCH!=='undefined'){tT=TOUCH.click;tTH=TOUCH.heavy;}
+   const hReq=keyH||tH||tTH;
+   const hMouse=!keyH&&(tH||tTH);
    const pReq=took('KeyR');
    if(pReq&&P.parryCd<=0&&P.stam>=15&&!P.carry&&P.dodT<=0){
     P.parryT=.28;P.parryCd=1.1;P.stam-=15;P.sd=.6;
     tone(660,.1,'triangle',.18,120);
     for(let i=0;i<8;i++)P.lv.part(P.x,P.y,.9,Math.cos(i/8*6.283)*2,Math.sin(i/8*6.283)*2,rnd(.5,1.5),.35,'#9ac8ff',2,false);
    }
-   if(hReq&&P.atkT<=0&&!P.carry&&P.dodT<=0&&P.stam>=25&&P.parryT<=0)P._heavyGo=true,P._heavyMouse=hMouse;
+   if(hReq&&P.atkT<=0&&!P.carry&&P.dodT<=0&&P.stam>=25&&P.parryT<=0){P._heavyGo=true;P._heavyMouse=hMouse;TOUCH&&TOUCH.heavy&&(TOUCH.heavy=false);}
    updP.call(P,dt);
+   /* tap/click swallowed by the attack cooldown: remember it and retry when ready */
+   if(!P._heavyGo&&(tT||tM)&&(P.swT<=0||P.atkT>0)){P._aimGo=true;P._aimSrc=(typeof TOUCH!=='undefined'&&TOUCH.on)?'t':'m';}
+   if(P._aimGo&&P.swT<=0&&P.atkT<=0&&!P.carry&&P.dodT<=0){
+    P._aimGo=false;const A=(P._aimSrc==='t'&&typeof TOUCH!=='undefined')?TOUCH:mouse;
+    P.aimX=A.x;P.aimY=A.y;try{P.attack(true);}catch(e){}}
    if(P._heavyGo){P._heavyGo=false;try{P.heavy(P._heavyMouse);}catch(e){}}
   };
  }catch(e){}

@@ -1,3 +1,9 @@
+/* ---------- touch aim / click state (written by 12-mobile.js, read by Player) ---------- */
+const TOUCH={x:0,y:0,on:false,click:false,heavy:false};
+window.TOUCH=TOUCH;/* expose to later scripts; desktop keeps its own mouse path */
+let TRIG={mClick:false,mHeavy:false};/* one-shot click triggers, owned by 10-combat.js */
+window.TRIG=TRIG;
+
 /* ---------- player ---------- */
 class Player{
  constructor(lv,x,y){Object.assign(this,{lv,x,y,r:.3,f:Math.PI/4,ph:0,stam:100,sd:0,exh:false,atkT:0,swT:0,swA:0,dodT:0,dodCd:0,inv:0,hurtT:0,carry:false,sprint:false,still:true,healCd:0,stepT:0,dx:0,dy:0});}
@@ -11,14 +17,20 @@ class Player{
   let sp=4.1;if(this.sprint)sp*=1.6;if(this.carry)sp*=.85;
   if(this.dodT>0)lv.moveEnt(this,this.dx*10*dt,this.dy*10*dt);
   else if(mv){lv.moveEnt(this,wx*sp*dt,wy*sp*dt);if(this.swT<=0)this.f+=angD(Math.atan2(wy,wx),this.f)*Math.min(1,dt*14);this.ph+=dt*sp*2.4;this.stepT-=dt;if(this.stepT<=0){this.stepT=this.sprint?.28:.5;if(this.sprint)lv.noise(this.x,this.y,5.5);}}
-  const clickA=mouse.click&&state==='play';mouse.click=false;
+  /* aim point: mouse on desktop, last touch point on mobile (set by 12-mobile) */
+  this.aimX=mouse.x;this.aimY=mouse.y;
+  if(typeof TOUCH!=='undefined'&&TOUCH.on){this.aimX=TOUCH.x;this.aimY=TOUCH.y;}
+  const clickA=(TRIG.mClick||mouse.click||mouse.down)||(typeof TOUCH!=='undefined'&&TOUCH.click);
+  /* TRIG flags are consumed by the combat layer (it retries taps during cooldowns),
+     so don't clear them here or queued attacks would be dropped */
+  mouse.click=false;if(typeof TOUCH!=='undefined')TOUCH.click=false;
   const kAtk=keys.Space||keys.KeyJ;
-  if((kAtk||clickA||mouse.down)&&this.atkT<=0&&!this.carry&&this.dodT<=0)this.attack(!kAtk&&(clickA||mouse.down));
+  if((kAtk||clickA)&&this.atkT<=0&&!this.carry&&this.dodT<=0)this.attack(!kAtk&&clickA);
   if(took('KeyQ'))this.useMed();
   if(took('KeyE'))this.toggleCarry();
  }
  attack(useMouse){
-  const lv=this.lv;let ang=this.f;if(useMouse){const w=s2w(mouse.x,mouse.y);ang=Math.atan2(w.y-this.y,w.x-this.x);}
+  const lv=this.lv;let ang=this.f;if(useMouse){const w=s2w(this.aimX,this.aimY);ang=Math.atan2(w.y-this.y,w.x-this.x);}
   if(S.assist){let best=null,bd=3.4;for(const e of lv.enemies){if(e.dead||e.dying||(e.type==='boss'&&!e.awake))continue;const d=dst(this.x,this.y,e.x,e.y),a=Math.atan2(e.y-this.y,e.x-this.x);if(d<bd&&(Math.abs(angD(a,ang))<1.3||d<2.2)){bd=d;best=a;}}if(best!==null)ang=best;}
   this.f=ang;this.swA=ang;this.atkT=.4;this.swT=.2;SFX.swing();lv.noise(this.x,this.y,7);
   const dmg=(30+rnd(-6,8))*(1+G.dmgUp*.15);let hits=0;
@@ -114,7 +126,8 @@ class Enemy{
    case'scream':if(this.bt<=0){shake(10);if(dp<4.2)p.hurt(this.dmg*.7,face);for(let i=0;i<20;i++)lv.part(this.x,this.y,.8,rnd(-6,6),rnd(-6,6),rnd(0,2),.6,'#e060ff',3,false);this.bs='recover';this.bt=.8;}break;}
  }
  hurt(d,ang,nokb){
-  if(this.dead||this.dying)return;if(this.type==='boss'&&!this.awake)return;const lv=this.lv;if(this.bs==='stun')d*=1.5;
+  if(this.dead||this.dying)return;if(!Number.isFinite(d)||d<=0)d=1;/* NaN/undefined damage used to silently softlock fights */
+  if(this.type==='boss'&&!this.awake)return;const lv=this.lv;if(this.bs==='stun')d*=1.5;
   this.hp-=d;this.hurtT=.14;SFX.hit();lv.fl(this.x,this.y,'-'+Math.round(d),'#ff8a5a');
   for(let i=0;i<5;i++)lv.part(this.x,this.y,.9,Math.cos(ang||0)*rnd(1,3)+rnd(-1,1),Math.sin(ang||0)*rnd(1,3)+rnd(-1,1),rnd(1,3),.5,this.type==='bloated'?'#7ac03a':'#8a1010',2.5);
   if(!nokb&&this.type!=='boss'){this.stun=.22;lv.moveEnt(this,Math.cos(ang)*.35,Math.sin(ang)*.35);}
