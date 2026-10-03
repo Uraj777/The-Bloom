@@ -64,10 +64,6 @@ def('wall',1,.3,p=>{box(p.x,p.y,0,p.w,p.d,p.h||2.4,p.col||'#5d574d');if(p.win){i
  for(let r=0;r<Math.floor(h-1);r++)for(let k=0;k<Math.floor(p.w/1.3);k++)if(((r*5+k*3+(p.x|0))%4)!==0)fr(p,.08+k*(1/Math.floor(p.w/1.3)),.08+k*(1/Math.floor(p.w/1.3))+.12,.8+r*1.0,1.5+r*1.0,((r+k)%3===0)?'#6a4a1a':'#14100e');},{tall:1});def('fence',1,.14,p=>{box(p.x,p.y,0,p.w,p.d,.85,'#5a4d40');box(p.x-.02,p.y-.02,.75,p.w+.04,p.d+.04,.1,'#7a6a58');});def('slight',.3,.3,p=>{box(p.x+.1,p.y+.1,0,.1,.1,3.3,'#2c2f33',true);box(p.x,p.y,3.3,.3,.3,.15,'#ffe9b0');glowDot(p.cx,p.cy,3.3,12,'#ffd58a',.35);},{lt:{r:9,i:.95,c:'#ffd58a',z:3.2},tall:1});def('barrel',.5,.5,p=>{box(p.x+.05,p.y+.05,0,.4,.4,.7,p.col||'#7a3326');box(p.x+.03,p.y+.03,.7,.44,.44,.04,'#222222',true);if(p.fire){const f=.5+.5*Math.sin(T*13+p.x*3);glowDot(p.cx,p.cy,1.0+f*.15,10+f*4,'#ff9a30',.8);glowDot(p.cx,p.cy,1.2+f*.2,5,'#ffe070',.9);}});def('dump',1.7,.9,p=>{box(p.x,p.y,0,p.w,p.d,.95,'#2f5a3a');box(p.x-.04,p.y-.04,.95,p.w+.08,p.d+.08,.1,'#244a2e');});def('barr',2,.5,p=>{box(p.x,p.y,0,p.w,p.d,.9,'#d6d6d6');for(let i=0;i<4;i++)fr(p,.04+i*.25,.04+i*.25+.12,.12,.8,'#c0352f');});def('sand',2,.7,p=>{box(p.x,p.y,0,p.w,p.d,.5,'#8a7a58');box(p.x+.1,p.y+.1,.5,p.w-.2,p.d-.2,.3,'#7a6a4a');});def('pump',.6,.5,p=>{box(p.x,p.y,0,p.w,p.d,1.3,'#b33a30');fr(p,.2,.8,.8,1.1,'#222222');fr(p,.2,.8,.2,.6,'#e8e8e8');});def('mail',.3,.3,p=>{box(p.x+.12,p.y+.12,0,.06,.06,.8,'#444444',true);box(p.x,p.y,.8,.3,.3,.22,'#3a5a8a');});def('bunker',10,4,p=>{box(p.x,p.y,0,p.w,p.d,3.4,'#4a4d4e');box(p.x-.3,p.y-.3,3.4,p.w+.6,p.d+.6,.35,'#3a3d3e');fr(p,.38,.62,0,2.3,'#2b3033');fr(p,.4,.6,.1,2.2,'#383e42');fr(p,.3,.7,2.6,3.15,'#0c2a1a');glowDot(p.x+p.w*.5,p.y+p.d,2.9,14,'#4dff9a',.5);},{tall:1,lt:{r:8,i:.9,c:'#4dff9a',z:2.5}});def('gate',2,.3,p=>{if(p.open){box(p.x,p.y,0,p.w,p.d,.12,'#555555',true);}else{box(p.x,p.y,0,p.w,p.d,1.8,'#666b6f');for(let i=0;i<3;i++)fr(p,.1+i*.3,.1+i*.3+.15,.2,1.6,'#c0352f');glowDot(p.cx,p.cy,1.95,8,'#ff3030',.5+.4*Math.sin(T*6));}});
 
 /* ---------- halo rings & wrecked vehicles ---------- */
-/* Halo = a crisp ring lying flat on the ground, centered exactly under the
-   entity (same center as its shadow), so it circles them instead of sliding
-   in front of them. The old glowDot sat at z≈0 but was drawn as a screen-space
-   circle, which made it look offset toward the camera for David & Nancy. */
 function haloRing(x,y,col){const pu=.72+.18*Math.sin(T*3+(x+y)*.7);groundEll(x,y,.55,null,col,Math.min(.5,.28+.14*pu),3);groundEll(x,y,.55,rgba(col,.05),null,.9);}
 def('carburn',2.3,1.1,p=>{const FT=.5+.5*Math.sin(T*7+p.x*3);shadow(p.cx,p.cy,Math.max(p.w,p.d)*.5,.3);
  box(p.x,p.y,.05,p.w*.94,p.d*.5,.3,'#191919');
@@ -80,3 +76,47 @@ def('carwreck',2.3,1.1,p=>{shadow(p.cx,p.cy,Math.max(p.w,p.d)*.5,.3);
  box(p.x+p.w*.12,p.y+p.d*.1,.1,p.w*.5,p.d*.34,.3,'#0e0e0e');
  box(p.x+p.w*.34,p.y+p.d*.3,.05,p.w*.16,p.d*.4,.5,'#1a1a1a');
  box(p.x+p.w*.4,p.y+p.d*.05,.9,p.w*.05,p.d*.3,.02,'#222222');},{tall:1});
+
+/* ---------- streetscape props ---------- */
+def('truck',6.4,1.5,p=>{const c=p.col||'#6a7076',hz=p.f!=='x';
+ shadow(p.cx,p.cy,3.2,.3);
+ if(hz){box(p.cx-2.3,p.y,.05,4.6,p.d*.94,1.15,c);box(p.cx-2.25,p.y+.03,1.2,4.5,p.d*.84,.05,mixc(c,1.3));
+  box(p.x,p.y+.06,.05,1.15,p.d*.78,1.0,mixc(c,.72));box(p.x+.12,p.y+.16,.82,.5,p.d*.5,.3,'#1c2226');box(p.x+.5,p.y+.16,1.32,.42,p.d*.56,.12,'#14181c');}
+ else{box(p.x,p.cy-2.3,.05,p.w*.94,4.6,1.15,c);box(p.x+.03,p.cy-2.25,1.2,p.w*.84,4.5,.05,mixc(c,1.3));
+  box(p.x+.06,p.y,.05,p.w*.78,1.15,1.0,mixc(c,.72));box(p.x+.16,p.y+.12,.82,p.w*.5,.5,.3,'#1c2226');box(p.x+.16,p.y+.5,1.32,p.w*.56,.42,.12,'#14181c');}
+},{tall:1});
+def('shop',3.8,2.4,p=>{const c=p.col||'#4a4438';
+ shadow(p.cx,p.cy,2.4,.28);
+ box(p.x,p.y,0,p.w,p.d,2.2,c);
+ box(p.x+.08,p.y+.08,2.2,p.w-.16,p.d-.16,.22,mixc(c,1.2));
+ box(p.x-.1,p.y+p.d-.2,1.9,p.w+.2,.4,.26,p.awn||'#7a3a2e');
+ box(p.x+.2,p.y+p.d-.12,.3,p.w-1.2,.16,1.2,'#20323a');
+ box(p.x+p.w-.75,p.y+p.d-.12,.3,1.0,.16,1.2,'#20323a');
+ glowDot(p.cx,p.y+p.d-.02,.8,16,p.lit?'#ffd67a':'#3a4044',p.lit?.5:.1);
+},{tall:1,lt:{r:4.5,i:.5,c:'#ffd67a',z:2.4}});
+def('mall',8,6.4,p=>{const c=p.col||'#54503f';
+ shadow(p.cx,p.cy,5,.32);
+ box(p.x,p.y,0,p.w,p.d,3.1,c);
+ box(p.x+.35,p.y+.35,3.1,p.w-.7,p.d-.7,.5,mixc(c,1.18));
+ box(p.x+.5,p.y+p.d-.3,0,1.7,.34,2.3,'#2a2e33');
+ box(p.x+.62,p.y+p.d-.34,.35,1.46,.12,1.6,'#ffd67a');
+ box(p.x+2.5,p.y+p.d-.16,2.3,p.w-4,.18,.6,'#241f1a');
+ glowDot(p.x+1.35,p.y+p.d-.15,1.1,24,'#ffcf6a',.3);
+},{tall:1,lt:{r:9,i:.7,c:'#ffcf6a',z:3.3}});
+def('ground',5.6,4.6,p=>{
+ shadow(p.cx,p.cy,3,.2);
+ groundEll(p.x+1.1,p.y+1.1,1.0,.8,'#c9b078','#b89a60',3);
+ box(p.x+2.5,p.y+.35,0,.14,.14,1.5,'#5a4a3a');box(p.x+4.9,p.y+.35,0,.14,.14,1.5,'#5a4a3a');
+ box(p.x+2.5,p.y+.3,1.5,2.54,.12,.1,'#4a3a2e');
+ box(p.x+3.1,p.y+.55,.55,.05,.05,1.0,'#3a3a3a');box(p.x+4.3,p.y+.55,.55,.05,.05,1.0,'#3a3a3a');
+ box(p.x+3.0,p.y+.62,0,.34,.34,.08,'#8a6a3a');box(p.x+4.2,p.y+.62,0,.34,.34,.08,'#8a6a3a');
+ box(p.x+2.6,p.y+2.7,0,.5,.5,1.1,'#7a4a3a');box(p.x+3.4,p.y+3.3,0,.5,.5,.35,'#7a4a3a');
+ box(p.x+2.75,p.y+2.95,.1,1.15,.5,.08,'#9a6a5a');
+},{tall:1});
+def('busstop',2.6,1.6,p=>{
+ shadow(p.cx,p.cy,1.8,.28);
+ box(p.x,p.y,0,p.w,p.d,2.0,'#2e3438');
+ box(p.x+.12,p.y+.14,.9,p.w-.24,p.d-.28,.9,'#20262a',true);
+ box(p.x+.3,p.y+p.d-.65,0,p.w-.7,.5,.5,'#4a3f33');
+ box(p.x+p.w-.4,p.y-.25,0,.28,.2,1.7,'#b8b2a4');
+},{tall:1});
