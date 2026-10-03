@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img" aria-labelledby="title desc">
+<title>THE BLOOM</title><desc>Minimal organic bloom mark and THE BLOOM wordmark.</desc>
+<rect width="720" height="220" rx="18" fill="#050709"/>
+<g transform="translate(42 42)">
+  <path d="M68 114c-27-8-42-27-42-52C26 36 44 18 70 18c25 0 44 18 44 44 0 25-19 44-46 52Z" fill="none" stroke="#e8e0d2" stroke-width="7"/>
+  <path d="M72 21c-7 25-6 48 0 77 6-29 7-52 0-77Z" fill="#e8e0d2" opacity=".95"/>
+  <path d="M30 65c25-7 48-6 77 0-29 6-52 7-77 0Z" fill="#e8e0d2" opacity=".95"/>
+  <circle cx="72" cy="65" r="7" fill="#b56a55"/>
+</g>
+<g fill="#e8e0d2">
+  <text x="190" y="87" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="600" letter-spacing="10">THE</text>
+  <text x="186" y="148" font-family="Arial,Helvetica,sans-serif" font-size="58" font-weight="700" letter-spacing="5">BLOOM</text>
+</g>
+<rect x="190" y="169" width="238" height="2" fill="#b56a55"/>
+</svg>
