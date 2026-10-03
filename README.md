@@ -6,6 +6,8 @@ THE BLOOM is a browser-based isometric survival-horror game built with plain HTM
 
 - Isometric top-down action and exploration
 - Survival combat with sprinting, dodging, and stamina management
+- Combo system with 3rd-hit finishers, heavy attacks, and parry-riposte counters
+- Telegraphed enemy attacks — red ground rings warn you before a strike
 - Infection system and antidote mechanics
 - Companion rescue logic for Anaya
 - Multiple enemy types, boss encounter, and chapter progression
@@ -44,6 +46,7 @@ The-Bloom/
 │   ├── 06-ui-flow.js
 │   ├── 07-levels.js
 │   ├── 09-enhancements.js
+│   ├── 10-combat.js
 │   └── 08-main.js
 ├── README.md
 └── (static game files as needed)
@@ -52,7 +55,7 @@ The-Bloom/
 Important: the script order in `index.html` is intentional and should remain as-is:
 
 ```text
-01 → 02 → 03 → 04 → 05 → 06 → 07 → 09 → 08
+01 → 02 → 03 → 04 → 05 → 06 → 07 → 09 → 10 → 08
 ```
 
 The final enhancement layer is loaded before the game bootstrap so it can extend the base systems without breaking the original module flow.
@@ -74,6 +77,8 @@ The final enhancement layer is loaded before the game bootstrap so it can extend
 | Mouse click | Attack toward cursor |
 | SHIFT | Sprint |
 | F | Dodge roll |
+| R | Parry (negates a hit, stuns the attacker, opens a riposte) |
+| K / Right click | Heavy swing (wide arc, big knockback, costs stamina) |
 | Q | Use medkit |
 | E | Carry / put down Anaya |
 | M | Large map |
@@ -88,7 +93,8 @@ This is a static web project, so there is no npm dependency tree or build proces
 
 Use these settings if deploying on Vercel:
 
-- Framework Preset: Other
+- Fr
+amework Preset: Other
 - Build Command: empty
 - Install Command: empty
 - Output Directory: .
