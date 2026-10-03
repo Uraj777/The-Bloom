@@ -63,6 +63,8 @@
   const updP=Player.prototype.update;
   Player.prototype.update=function(dt){
    const P=this;
+   /* timers must not run while paused/intro/game-over (dt is otherwise frozen for the world) */
+   if(state!=='play'){updP.call(P,dt);return;}
    P.parryT=(P.parryT||0)-dt;P.parryCd=(P.parryCd||0)-dt;
    P.comboT=(P.comboT||0)-dt;if(P.comboT<=0)P.comboN=0;
    const keyH=took('KeyK');
