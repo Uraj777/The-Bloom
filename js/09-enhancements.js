@@ -998,3 +998,4 @@ function afterUpdate(lv, d, dt) {
 /* ================================= BOOT ================================= */
 function safe(fn, tag) { try { fn(); } catch (e) { warn(tag, e); } }
 safe(newTextures, 'textures'); safe(newProps, 'props'); safe(installProps, 'occ'); safe(extendSFX, 'sfx'); safe(installHooks, 'hooks'); safe(installCity, 'city');
+})();
