@@ -1,6 +1,8 @@
 /* ---------- game state & HUD ---------- */
 let G=null;// built in boot() after settings load, so difficulty medkits are correct
-function newGame(){return{score:0,hp:100,maxHp:100,meds:DIFFS[S.difficulty].med,infect:0,trust:100,dmgUp:0,level:0,bought:{},snap:null};}
+function newGame(){return{score:0,hp:100,maxHp:100,meds:DIFFS[S.difficulty].med,infect:0,trust:100,dmgUp:0,level:0,bought:{},snap:null,kills:0,runKills:0,maxCombo:0};}
+let bloomBst={};try{bloomBst=JSON.parse(localStorage.getItem('bloomBst')||'{}')||{};}catch(e){bloomBst={};}
+const saveBst=(i,s)=>{if((bloomBst[i]|0)>=s)return false;bloomBst[i]=s;try{localStorage.setItem('bloomBst',JSON.stringify(bloomBst));}catch(e){}return true;};
 let subTimer=0;
 function say(txt,ms,col){if(!S.subs&&!col)return;const el=$('sub');el.textContent=txt;el.style.color=col||'';el.style.opacity=1;clearTimeout(subTimer);subTimer=setTimeout(()=>el.style.opacity=0,ms||3200);}
 let banTimer=0;
@@ -34,7 +36,7 @@ const INTRO=[
 function startLevel(i){
  G.level=i;const D=DIFFS[S.difficulty];
  G.hp=Math.min(G.maxHp,G.hp+(i>0?25:0));if(i===0&&!G.snap){G.hp=G.maxHp;}
- G.snap={hp:G.hp,meds:G.meds,infect:G.infect,score:G.score,trust:G.trust};
+ G.snap={hp:G.hp,meds:G.meds,infect:G.infect,score:G.score,trust:G.trust,kills:0,maxCombo:G.maxCombo||0};G.kills=0;
  LV=BUILD[i]();state='play';mapBig=false;
  if(LV.ui)document.documentElement.style.setProperty('--acc',LV.ui);
  $('ov').style.display='none';$('hud').style.display='block';ovAnim=null;
@@ -43,10 +45,10 @@ function startLevel(i){
  helpShown=i===0?12:5;$('help').style.opacity=1;
  banner(INTRO[i].t,LV.ui||THEMES[S.theme].acc);say(INTRO[i].tip,4500);
 }
-function levelDone(){G.trust=LV.daughter.trust;unlocked=Math.max(unlocked,G.level+1);try{localStorage.setItem('bloomU2',unlocked);}catch(e){}if(G.level>=4)showEnding();else showShop(G.level+1);}
-function gameOver(msg){state='over';$('hud').style.display='none';
+function levelDone(){G.trust=LV.daughter.trust;unlocked=Math.max(unlocked,G.level+1);try{localStorage.setItem('bloomU2',unlocked);}catch(e){}saveBst(G.level,G.score);if(G.level>=4)showEnding();else showShop(G.level+1);}
+function gameOver(msg){state='over';$('hud').style.display='none';const nb=saveBst(G.level,G.score),best=bloomBst[G.level]|0;
  showOv(`<div class="ttl" style="font-size:68px;color:#ff4a4a;text-shadow:0 0 40px #f00a">GAME OVER</div><div class="sub" style="color:#7a3a3a">THE BLOOM HAS CONSUMED THEM</div>
  <div class="txt">${msg||'You could not protect her.'}<br>The infection spreads. David's name is forgotten.</div>
- <div class="kv"><span>Score</span><b>${G.score}</b><span>Difficulty</span><b>${DIFFS[S.difficulty].name}</b></div>
+ <div class="kv"><span>Score</span><b>${G.score}${nb?' <i style="color:#4dffa0">NEW BEST!</i>':''}</b><span>Chapter Best</span><b>${best}</b><span>Kills</span><b>${G.kills}</b><span>Max Combo</span><b>${G.maxCombo||0}</b><span>Difficulty</span><b>${DIFFS[S.difficulty].name}</b></div>
  <div class="row"><button class="btn" onclick="retry()">↺ RETRY LEVEL</button><button class="btn" onclick="showMenu()">⌂ MENU</button></div>`,'dead');}
-function retry(){const s=G.snap;if(s){G.hp=s.hp<=0?G.maxHp:s.hp;G.meds=s.meds;G.infect=s.infect;G.score=s.score;G.trust=s.trust;}startLevel(G.level);}
+function retry(){const s=G.snap;if(s){G.hp=s.hp<=0?G.maxHp:s.hp;G.meds=s.meds;G.infect=s.infect;G.score=s.score;G.trust=s.trust;G.kills=0;G.maxCombo=s.maxCombo||0;}startLevel(G.level);}

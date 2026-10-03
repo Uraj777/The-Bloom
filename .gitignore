@@ -1,1 +1,8 @@
-(empty)
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+*.log
+.DS_Store
+Thumbs.db
