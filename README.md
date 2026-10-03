@@ -1,150 +1,123 @@
-# 🌸 The Bloom
+# THE BLOOM
 
-An immersive **HTML5 Canvas-based action game** featuring dynamic combat mechanics, character progression, and strategic gameplay elements.
+**THE BLOOM** is an isometric survival-horror game by Utkarsh Raj, built as a static HTML5 Canvas experience with vanilla JavaScript.
 
-## 🎮 Features
+## Current architecture
 
-- **Interactive Combat System**: Engage in real-time battles with dynamic health management
-- **Multi-character Gameplay**: Play as Arjun with support from Anaya against evolving threats
-- **Infection Mechanic**: Track and manage an infection system that affects gameplay
-- **Boss Battles**: Face challenging boss encounters with unique mechanics
-- **Real-time Score System**: Track your performance and compete for high scores
-- **Dynamic HUD**: Live health bars, character status, and combat feedback
-- **Responsive Canvas Rendering**: Optimized graphics powered by HTML5 Canvas API
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- No installation required - runs directly in browser
-
-### How to Run
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/cser-utkarsh-raj/The-Bloom.git
-   cd The-Bloom
-   ```
-
-2. **Open in browser**
-   - Double-click `index.html`, or
-   - Use a local server:
-     ```bash
-     python -m http.server 8000
-     # Then visit http://localhost:8000
-     ```
-
-## 📁 Project Structure
-
-```
+```text
 The-Bloom/
-├── index.html           # Main game entry point
-├── js/
-│   ├── game-01.js      # Core game initialization
-│   ├── game-02.js      # Game loop & rendering
-│   ├── game-03.js      # Player mechanics
-│   ├── game-04.js      # Combat system
-│   ├── game-05.js      # Enemy AI & behavior
-│   ├── game-06.js      # Boss encounters
-│   ├── game-07.js      # UI & HUD management
-│   └── game-08.js      # Game state & scoring
+├── index.html
 ├── css/
-│   └── style.css       # Styling & visual effects
-└── README.md           # This file
+│   └── style.css
+├── js/
+│   ├── 01-core.js          # canvas, settings, audio primitives, input, textures
+│   ├── 02-rendering.js     # drawing primitives and world props
+│   ├── 03-level-engine.js  # Level class, world rendering, lighting, minimap
+│   ├── 04-entities.js      # Player, Anaya, enemies, combat
+│   ├── 05-game-state.js    # run state, HUD, level transitions
+│   ├── 06-ui-flow.js       # menu, chapters, intro, pause, shop, endings
+│   ├── 07-levels.js        # five chapter builders
+│   ├── 08-main.js          # frame loop and boot
+│   └── 09-enhancements.js  # cinematic/audio/FX/AI/world enhancement layer
+└── README.md
 ```
 
-## 🎯 Gameplay
+### Script order matters
 
-- **Objective**: Survive encounters with enemies and bosses while managing health and infection
-- **Characters**:
-  - **ARJUN**: Main playable character with health bar
-  - **ANAYA**: Support character tracking status
-  - **INFECTION**: Dynamic threat meter
-  - **BOSS**: Ultimate challenge with unique mechanics
+The game uses classic browser scripts rather than ES modules. Keep this exact order in index.html:
 
-- **Controls**: [Add your control scheme here - keyboard/mouse inputs]
+```text
+01-core.js
+02-rendering.js
+03-level-engine.js
+04-entities.js
+05-game-state.js
+06-ui-flow.js
+07-levels.js
+09-enhancements.js
+08-main.js
+```
 
-- **Mechanics**:
-  - Health management across characters
-  - Real-time combat feedback
-  - Infection tracking system
-  - Progressive difficulty
+09-enhancements.js intentionally runs before 08-main.js: it wraps the existing classes/functions and expands the level builders before the game boots.
 
-## 🛠️ Technologies Used
+## What the enhancement layer adds
 
-- **HTML5 Canvas** - Graphics rendering
-- **Vanilla JavaScript** - Game logic and mechanics
-- **CSS3** - Styling and visual effects
-- **No external dependencies** - Pure browser-based game
+The new enhancement patch is additive rather than a rewrite. It hooks into the existing V2 game and adds:
 
-## 📊 Game Statistics
+- richer procedural audio and an audio bus/reverb layer
+- chapter-specific ambient sound beds
+- additional combat, hit, hurt, kill, explosion, boss and environmental SFX
+- hit-stop, camera kick, screen flashes and impact rings
+- expanded particle effects, spores, smoke, embers, splashes and death FX
+- enhanced world-space lighting and atmospheric passes
+- improved enemy alert/chase feedback and wind-up cues
+- boss cinematics and phase transitions
+- low-health heartbeat and exhaustion breathing
+- surface-aware footsteps
+- additional environmental/world props
+- expanded city-style environments for chapters 1, 3 and 5
+- ambient enemy populations that do not interfere with chapter wave-clear logic
+- additional pickups and environmental notes
+- safer optional hooks: missing features fail softly instead of preventing the base game from booting
 
-- **Language Composition**: 79.1% JavaScript, 20.9% HTML
-- **Modular Code**: 8 organized game modules for maintainability
-- **Optimized Performance**: Canvas-based rendering for smooth gameplay
+## Chapters
 
-## 🎨 Visual Components
+1. **HOME DEFENSE** — survive three waves and protect Anaya.
+2. **THE BLOOM-WIFE** — confront Maya after the Bloom takes her body.
+3. **THE ROAD** — cross the infected road and reach evacuation.
+4. **SCHOOL SHELTER** — survive 60 seconds with the officer and survivors.
+5. **FINAL ESCAPE** — survive the bombardment and reach the bunker.
 
-- **Player Canvas Elements**: Individual character portraits (46x46px)
-- **Health Bars**: Color-coded progression indicators
-- **Boss Arena**: Separate canvas overlay for boss encounters
-- **Score Display**: Real-time scoring UI
-- **Combat Feedback**: Visual prompts and banners for game events
+## Controls
 
-## 🔧 Development
+| Input | Action |
+|---|---|
+| WASD / Arrow keys | Move |
+| Space | Attack / nearby auto-target |
+| Mouse click | Attack toward cursor |
+| Shift | Sprint; consumes stamina and creates noise |
+| F | Dodge roll |
+| Q | Use medkit |
+| E | Carry / put down Anaya |
+| M | Toggle large map |
+| P / Esc | Pause |
+| H | Toggle help |
 
-### Adding New Features
-1. Extend the modular game files in `/js/`
-2. Update styles in `/css/style.css`
-3. Test in browser with console open (F12)
+## Core systems
 
-### Code Organization
-- Each `game-XX.js` file handles specific functionality
-- Modular design allows easy feature expansion
-- Canvas context shared across game modules
+- Health, stamina and Anaya health
+- Infection and trust
+- Noise-aware enemies
+- Drifter, Stalker and Bloated infected
+- Maya boss fight
+- Medkits and antidotes
+- Upgrade shop between chapters
+- Multiple endings based on infection and health
+- Difficulty, graphics, lighting, weather, particles, shake, minimap and subtitle settings
 
-## 📝 TODO / Future Enhancements
+## Local development
 
-- [ ] Add detailed control scheme documentation
-- [ ] Implement difficulty levels
-- [ ] Add sound effects and background music
-- [ ] Create leaderboard system
-- [ ] Add mobile touch controls
-- [ ] Implement save/load game state
-- [ ] Add pause & resume functionality
-- [ ] Create tutorial/help overlay
+No build step is required.
 
-## 🤝 Contributing
+```bash
+python -m http.server 8000
+```
 
-Contributions are welcome! Feel free to:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Open http://localhost:8000 in a modern browser.
 
-## 📄 License
+For deployment on Vercel, use a static deployment:
 
-This project is currently unlicensed. [Choose and add a license](https://choosealicense.com/)
+- **Framework Preset:** Other
+- **Build Command:** empty
+- **Output Directory:** .
+- **Install Command:** empty
 
-## 💡 Tips for Players
+index.html is the entry point.
 
-- Monitor your infection meter carefully
-- Balance offense and defense
-- Use character abilities strategically
-- Watch for visual feedback cues during combat
-- Aim for high score on every run
+## Validation
 
-## 👥 Author
+The runtime is intentionally dependency-free. Before pushing changes, syntax-check all JavaScript files and verify that the classic-script load order has not changed.
 
-**Utkarsh Raj** - [@cser-utkarsh-raj](https://github.com/cser-utkarsh-raj)
+## Author
 
-## 📬 Feedback & Support
-
-Found a bug? Have a suggestion? Please open an [issue](https://github.com/cser-utkarsh-raj/The-Bloom/issues) on GitHub.
-
----
-
-**Happy Gaming! 🎮✨**
-
-*Made with ❤️ using HTML5 Canvas*
+**Utkarsh Raj**
