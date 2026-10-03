@@ -14,7 +14,9 @@ THE BLOOM is a browser-based isometric survival-horror game built with plain HTM
 - Multiple endings and local chapter progress
 - Audio, particles, lighting, and atmospheric enhancement layer
 - Refined chapter intro screens, animated pixel title screen, flickering lights, and a new bloom-mark favicon/logo
-- Full mobile support — auto-detected on touch devices: touch and hold anywhere to walk toward your finger, quick tap to attack, on-screen buttons (DODGE / PARRY / MED / NANCY / MAP / pause). Desktop keyboard and mouse are unchanged
+- Full mobile support — auto-detected on touch devices: touch and hold anywhere to walk toward your finger, double-tap to attack, plus just two small buttons (MAP / pause). Desktop keyboard and mouse are unchanged
+- Levels 3 and 5 are much bigger streetscapes — mall, school, shops, gas station, playgrounds, school buses, trucks and burning cars along the way
+- Per-level color themes that match the title screen mood: warm amber home, rust-red horror, storm-silver highway, ember finale
 - Halo rings under every being: green (healthy), yellow to orange (rising infection), red (infected), violet (Maya)
 - Wrecked and burning vehicles scattered through levels 1, 3 and 5
 
@@ -98,9 +100,9 @@ oward cursor |
 | Input | Action |
 |---|---|
 | Touch and hold anywhere | Walk toward your finger (hold far away to sprint) |
-| Quick tap | Attack toward that spot |
+| Double-tap | Attack toward that spot |
 | Second finger tap | Attack while moving |
-| DODGE / PARRY / MED / NANCY buttons | Same as F / R / Q / E |
+| MAP / II buttons | Big map / pause |
 | MAP button | Open / close the big map |
 | II button | Pause |
 

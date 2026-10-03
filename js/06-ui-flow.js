@@ -59,7 +59,7 @@ function showControls(){showOv(`<div class="ttl" style="font-size:34px">HOW TO P
 function showChapters(){const n=['HOME DEFENSE','THE BLOOM-WIFE','THE ROAD','SCHOOL SHELTER','FINAL ESCAPE'];
  showOv(`<div class="ttl" style="font-size:34px">CHAPTERS</div><div class="sub">COMPLETED CHAPTERS UNLOCK</div>${n.map((x,i)=>`<button class="btn ${i<=unlocked?'':'off'}" onclick="chapter(${i})">${i+1}. ${x}</button>`).join('')}<div class="row"><button class="btn" onclick="showMenu()">← BACK</button></div>`,'menu');}
 function chapter(i){G=newGame();G.level=i;showIntro(i);}
-function showMenu(){settingsBack='menu';state='menu';LV=null;$('hud').style.display='none';applyTheme();
+function showMenu(){applyTheme();settingsBack='menu';state='menu';LV=null;$('hud').style.display='none';applyTheme();
  showOv(`<div class="menu-bg" aria-hidden="true"><div class="menu-moon"></div><div class="menu-horizon"></div><div class="menu-house"><i></i><b></b><em></em></div><div class="menu-water"></div></div>
  <div class="menu-shell">
   <img class="brand-logo" src="logo.svg" alt="THE BLOOM">

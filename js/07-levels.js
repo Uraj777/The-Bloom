@@ -4,7 +4,7 @@
 const CARS=['#8a2a2a','#2e5a8a','#6b6b2a','#3a6a4a','#8a8a8a','#5a3a6a','#2a2a2a'];
 const NOTE1='Maya\'s field notebook: "Day 3 — the fish are dead in the water, curled into a spiral. It learns from us. If I don\'t come back, David, take Nancy and go north."';
 function buildL1(){
- const L=new Level(0,44,34,'grass'),D=DIFFS[S.difficulty];L.dark=.5;
+ const L=new Level(0,44,34,'grass'),D=DIFFS[S.difficulty];L.dark=.5;L.amb=[14,9,4];L.ui='#e8b06a';
  L.fl('road',0,28,44,34);L.fl('walk',0,26,44,28);L.fl('walk',9,20,13,26);L.fl('walk',8,19,14,21);L.fl('wood',6,3,16,19);L.fl('carpet',16,3,28,11);L.fl('tile',16,11,28,19);
  L.decal({t:'rug',x:7.4,y:5.2,w:4.6,d:4.2,c1:'#6a2a2a',c2:'#8a3a3a'});L.decal({t:'rug',x:19.5,y:5.5,w:4,d:3,c1:'#2a3a6a',c2:'#3a4a8a'});
  for(let x=1;x<44;x+=4)L.decal({t:'rect',x,y:30.9,w:2,d:.2,c:'#caa24a',a:.8});
@@ -35,7 +35,7 @@ function buildL1(){
  return L;
 }
 function buildL2(){
- const L=new Level(1,30,24,'dark'),D=DIFFS[S.difficulty];L.dark=.7;L.flicker=true;L.amb=[10,3,16];
+ const L=new Level(1,30,24,'dark'),D=DIFFS[S.difficulty];L.dark=.7;L.flicker=true;L.amb=[18,3,6];L.ui='#d8735f';
  L.fl('dark',2,2,15,22);L.fl('carpet',15,2,28,22);
  L.decal({t:'rug',x:5,y:14,w:5,d:4,c1:'#3a1a3a',c2:'#4a2a4a'});L.decal({t:'bloom',x:20,y:13,r:3.2});L.decal({t:'bloom',x:6,y:7,r:2});L.decal({t:'bloom',x:24,y:19,r:2});
  const WC='#4a4050';L.wH(2,28,2,{col:WC,win:5});L.wH(2,28,22,{col:WC});L.wV(2,22,2,{col:WC,win:4});L.wV(2,22,28,{col:WC,win:4});L.wV(2,9.5,15,{col:WC});L.wV(14.5,22,15,{col:WC});
@@ -55,32 +55,43 @@ function buildL2(){
  return L;
 }
 function buildL3(){
- const L=new Level(2,28,100,'grass'),D=DIFFS[S.difficulty];L.dark=.55;L.rain=1;L.storm=true;
- L.fl('road',8,0,20,100);L.fl('walk',6,0,8,100);L.fl('walk',20,0,22,100);L.fl('lino',22,40,28,50);
- for(let y=1;y<100;y+=4)L.decal({t:'rect',x:13.9,y,w:.22,d:2,c:'#caa24a',a:.75});
+ const L=new Level(2,40,130,'grass'),D=DIFFS[S.difficulty];L.dark=.55;L.rain=1;L.storm=true;L.amb=[8,12,16];L.ui='#a9c1cf';
+ L.fl('road',12,0,26,130);L.fl('walk',10,0,12,130);L.fl('walk',26,0,28,130);
+ for(let y=1;y<130;y+=4)L.decal({t:'rect',x:18.9,y,w:.22,d:2,c:'#caa24a',a:.75});
  const r=seeded(31);
- for(let y=4;y<96;y+=14){L.add('house',.5,y,{w:5,d:5,col:pick(['#6a5a4a','#4a5a6a','#5a4a4a']),h:3});L.add('house',22.8,y+7,{w:4.8,d:5,col:pick(['#6a5a4a','#4a5a6a']),h:2.8});}
- for(let y=2;y<98;y+=5){L.add('tree',r()*1.5+.3,y+r()*2,{s:.9+r()*.3});L.add('tree',26.5+r()*.8-.6,y+2+r()*2,{s:.9+r()*.3,inf:r()<.3});}
- for(let y=10,i=0;y<96;y+=12,i++)L.add('slight',i%2?7.3:20.4,y);
- for(let y=88,i=0;y>20;y-=6.5,i++){if(Math.abs(y-58)<4||Math.abs(y-14)<4)continue;const x=8.4+r()*9,rot=r()<.5;L.add('car',x,y,{col:CARS[i%CARS.length],r:rot?1:0});}
- L.add('bus',8.4,57,{});L.add('barr',8.2,14);L.add('barr',16.5,14);L.add('sand',9,17);L.add('sand',17,17);
- L.add('car',20.6,44,{col:'#8a2a2a',r:1});L.add('pump',20.8,41);L.add('pump',20.8,48);L.add('carburn',12.6,63,{r:1});L.add('carburn',17.4,25,{});L.add('carwreck',10.8,76,{});L.add('carwreck',16.4,89,{r:1});
- L.wH(22,27.7,40,{col:'#6a5a4a'});L.wH(22,27.7,50,{col:'#6a5a4a',win:2});L.wV(40,44,22,{col:'#6a5a4a'});L.wV(46,50,22,{col:'#6a5a4a'});L.wV(40,50,27.7,{col:'#6a5a4a',win:3});
- L.add('shelf',23,40.4);L.add('shelf',25,40.4);L.add('counter',26,45,{w:1.2,d:.8,r:1});L.add('crate',23,48.5);
- L.add('barrel',7,30);L.add('dump',6.4,70);L.add('barrel',7.2,84);
- L.decal({t:'bloom',x:14,y:36,r:2.4});L.decal({t:'bloom',x:11,y:72,r:2});L.decal({t:'bloom',x:16,y:24,r:2.2});
- L.goal={x:14,y:7,r:3.2};L.add('car',9.5,5,{col:'#3a5a3a'});L.add('car',17.5,5,{col:'#3a5a3a'});
- const groups=[[88,2],[78,3],[66,3],[52,3],[38,3],[28,4],[20,3],[12,2]];
- L.finish();L.start(14,96,15.3,97);
- groups.forEach(([y,n],gi)=>{for(let i=0;i<n;i++){const[x,yy]=L.freeSpot(9,19,y-3,y+3,.7);const t=gi===3&&i===0?'stalker':gi===5&&i===0?'bloated':(gi>=6&&i===2)?'stalker':'drifter';L.spawnEnemy(t,x,yy,{pr:4});}});
- L.spawn=[[14,50]];
- L.pickup('med',12,80);L.pickup('med',26,45);L.pickup('med',17,26);L.pickup('anti',16,60);L.pickup('note',12,92,'A radio, still warm: "…all survivors, the evacuation point is north of the highway. Do not stop for anyone. We repeat — do not stop."');L.pickup('note',24.5,43,'A note taped to the shutters: "CLOSED. They came out of the water. My son is on the second floor. Please, somebody read this."');
- L.objText=()=>`REACH THE EVACUATION POINT — ${Math.max(0,Math.round((L.player.y-7)*1))} m`;
- L.tick=dt=>{const p=L.player,d=L.daughter;L.hint='';if(p.y<11&&Math.abs(p.x-14)<7){if(dst(p.x,p.y,d.x,d.y)<6||d.carried)L.win();else L.hint='WAIT FOR NANCY';}};
+ for(let y=30;y<122;y+=16)L.add('house',.5,y,{w:5,d:5,col:pick(['#6a5a4a','#4a5a6a','#5a4a4a']),h:3});
+ for(let y=8;y<124;y+=16){if(y>74&&y<98)continue;L.add('house',34.8,y,{w:4.8,d:5,col:pick(['#6a5a4a','#4a5a6a']),h:2.8});}
+ for(let y=2;y<128;y+=5){L.add('tree',r()*1.5+.3,y+r()*2,{s:.9+r()*.3});L.add('tree',37.5+r()*.8-.6,y+2+r()*2,{s:.9+r()*.3,inf:r()<.3});}
+ for(let y=10,i=0;y<122;y+=12,i++)L.add('slight',i%2?11.3:26.4,y);
+ for(let y=118,i=0;y>20;y-=6.5,i++){if(Math.abs(y-58)<4||Math.abs(y-14)<4)continue;const x=12.4+r()*10,rot=r()<.5;L.add('car',x,y,{col:CARS[i%CARS.length],r:rot?1:0});}
+ L.add('truck',13.2,66,{col:'#3a5a7a',r:1});L.add('truck',20.5,33,{col:'#7a4a3a'});
+ L.add('carburn',19,52,{r:1});L.add('carwreck',15,90,{});
+ L.add('mall',1.5,16,{col:'#54503f'});
+ L.fl('walk',1,26,10,40);
+ for(let i=0;i<5;i++)L.add('car',2.2+r()*6,28+i*2.6,{col:CARS[(i+3)%CARS.length],r:1});
+ L.add('shop',2.5,48,{col:'#4a4438',awn:'#7a3a2e',lit:true});L.add('shop',2.5,54.5,{col:'#3f4a44',awn:'#2e5a7a'});L.add('shop',2.5,61,{col:'#4a3f44',awn:'#7a6a2e',lit:true});
+ L.add('busstop',27,28,{});
+ L.wH(30,36,78,{col:'#6a5a4a'});L.wH(30,36,90,{col:'#6a5a4a'});L.wV(78,83,30,{col:'#6a5a4a'});L.wV(85,90,30,{col:'#6a5a4a'});L.wV(78,90,36,{col:'#6a5a4a',win:2});
+ L.fl('lino',30,78,36,90);L.add('tdesk',31,80);L.add('tdesk',33,80);L.add('board',30.4,78.5,{r:1});L.add('locker',30.2,86);
+ L.add('bus',24,88,{r:1});
+ L.add('ground',30.5,98,{});
+ L.wH(28,33.7,40,{col:'#6a5a4a'});L.wH(28,33.7,50,{col:'#6a5a4a',win:2});L.wV(40,50,28,{col:'#6a5a4a'});L.wV(40,44,33.7,{col:'#6a5a4a'});L.wV(46,50,33.7,{col:'#6a5a4a'});
+ L.fl('lino',28,40,34,50);L.add('shelf',29,40.4);L.add('shelf',32,40.4);L.add('counter',32.8,45,{w:1.2,d:.8,r:1});L.add('crate',29,48.5);
+ L.add('pump',26.6,41);L.add('pump',26.6,48);
+ L.add('barrel',11,40);L.add('dump',10.4,88);L.add('barrel',11.2,116);
+ L.decal({t:'bloom',x:19,y:46,r:2.4});L.decal({t:'bloom',x:15,y:96,r:2});L.decal({t:'bloom',x:22,y:30,r:2.2});L.decal({t:'bloom',x:17,y:112,r:1.8});
+ L.goal={x:19,y:7,r:3.2};L.add('car',13.5,5,{col:'#3a5a3a'});L.add('car',23.5,5,{col:'#3a5a3a'});
+ const groups=[[120,2],[110,3],[98,3],[86,3],[72,3],[58,4],[46,3],[34,3],[24,2]];
+ L.finish();L.start(19,126,20.3,127);
+ groups.forEach(([y,n],gi)=>{for(let i=0;i<n;i++){const[x,yy]=L.freeSpot(13,25,y-3,y+3,.7);const t=gi===3&&i===0?'stalker':gi===5&&i===0?'bloated':(gi>=6&&i===2)?'stalker':'drifter';L.spawnEnemy(t,x,yy,{pr:4});}});
+ L.spawn=[[19,60]];
+ L.pickup('med',16,112);L.pickup('med',32,62);L.pickup('med',21,26);L.pickup('anti',20,80);L.pickup('note',16,122,'A radio, still warm: "…all survivors, the evacuation point is north of the highway. Do not stop for anyone. We repeat — do not stop."');L.pickup('note',33,44,'A note taped to the shutters: "CLOSED. They came out of the water. My son is on the second floor. Please, somebody read this."');
+ L.objText=()=>'REACH THE EVACUATION POINT — '+Math.max(0,Math.round(L.player.y-7))+' m';
+ L.tick=dt=>{const p=L.player,d=L.daughter;L.hint='';if(p.y<11&&Math.abs(p.x-19)<7){if(dst(p.x,p.y,d.x,d.y)<6||d.carried)L.win();else L.hint='WAIT FOR NANCY';}};
  return L;
 }
 function buildL4(){
- const L=new Level(3,34,26,'walk'),D=DIFFS[S.difficulty];L.dark=.5;L.flicker=true;L.amb=[4,8,18];
+ const L=new Level(3,34,26,'walk'),D=DIFFS[S.difficulty];L.dark=.5;L.flicker=true;L.amb=[8,12,7];L.ui='#b8d8a0';
  L.fl('lino',2,2,32,24);L.decal({t:'rug',x:27,y:12,w:5,d:6,c1:'#3a3a5a',c2:'#4a4a6a'});
  const WC='#5a5c6a';L.wH(2,32,2,{col:WC,win:3});L.wH(2,8,24,{col:WC});L.wH(10.5,23.5,24,{col:WC});L.wH(26,32,24,{col:WC});L.wV(2,12,2,{col:WC,win:3});L.wV(14.5,24,2,{col:WC});L.wV(2,24,32,{col:WC,win:3});
  L.wV(2,9,26,{col:WC});L.wH(26,28,9,{col:WC});L.wH(30,32,9,{col:WC});
@@ -103,33 +114,40 @@ function buildL4(){
  return L;
 }
 function buildL5(){
- const L=new Level(4,30,110,'waste'),D=DIFFS[S.difficulty];L.dark=.5;L.ash=true;L.amb=[18,8,4];L.storm=true;
- L.fl('road',8,0,22,110);L.fl('walk',6,0,8,110);L.fl('walk',22,0,24,110);
- for(let y=1;y<110;y+=4)L.decal({t:'rect',x:14.9,y,w:.22,d:2,c:'#6a6a4a',a:.6});
+ const L=new Level(4,40,140,'waste'),D=DIFFS[S.difficulty];L.dark=.5;L.ash=true;L.amb=[18,8,4];L.storm=true;L.ui='#ff9a50';
+ L.fl('road',12,0,26,140);L.fl('walk',10,0,12,140);L.fl('walk',26,0,28,140);
+ for(let y=1;y<140;y+=4)L.decal({t:'rect',x:18.9,y,w:.22,d:2,c:'#6a6a4a',a:.6});
  const r=seeded(77);
- for(let y=6;y<104;y+=9){L.add('ruin',.4+r()*.6,y,{w:4.5+r()*1.2,d:5,h:3+Math.floor(r()*4)});L.add('ruin',24.6,y+3,{w:4.6,d:5,h:3+Math.floor(r()*4)});}
- for(let y=102,i=0;y>16;y-=7,i++){if(Math.abs(y-72)<3||Math.abs(y-40)<3)continue;L.add('car',8.4+r()*9,y,{col:i%2?'#2a2420':CARS[i%CARS.length],r:r()<.5?1:0});}
- L.add('carburn',10.5,90,{});L.add('carburn',18.6,54,{r:1});L.add('carwreck',12.8,28,{r:1});L.add('carwreck',9.6,66,{});
- for(let y=12,i=0;y<104;y+=12,i++)L.add('barrel',i%2?6.6:22.6,y,{fire:true,col:'#5a2a22'});
- for(let y=8;y<104;y+=10)L.add('tree',r()<.5?6.2:23,y+r()*3,{dead:true,s:1});
- L.add('sand',9,24);L.add('sand',17,24);L.add('barr',9,60);L.add('barr',17,86);
- L.decal({t:'bloom',x:14,y:96,r:2.4});L.decal({t:'bloom',x:12,y:56,r:2.6});L.decal({t:'bloom',x:17,y:30,r:2.4});L.decal({t:'bloom',x:11,y:18,r:2});
- const gates=[];for(const gy of[72,40])for(let x=8;x<22;x+=2)gates.push(L.add('gate',x,gy,{zone:gy===72?1:2,open:false}));
- L.add('bunker',10,2.2);L.goal={x:15,y:9,r:3.5};
- L.finish();L.start(15,106,16.3,107);
- const zb=[[72,104,1,7],[40,72,2,9],[12,40,0,8]];
- for(const[y0,y1,z,n]of zb)for(let i=0;i<n;i++){const[x,y]=L.freeSpot(9,21,y0+3,y1-2,.7);const t=i%5===4?'bloated':i%3===2?'stalker':'drifter';L.spawnEnemy(t,x,y,{zone:z,pr:4});}
- L.spawn=[[10,80],[20,80],[10,50],[20,50],[10,22],[20,22],[14,95],[14,60]];
- L.pickup('med',12,98);L.pickup('med',17,84);L.pickup('med',12,66);L.pickup('med',16,50);L.pickup('med',12,34);L.pickup('med',17,20);L.pickup('anti',15,90);L.pickup('anti',13,56);L.pickup('anti',16,26);
- L.pickup('note',7,100,'A looping military broadcast: "All civilians proceed to Bunker 7. Coastal bombardment begins at dawn. This is not a drill."');L.pickup('note',22.5,45,'Scratched high on a wall, where somebody climbed: "It was never an accident. The ocean is taking back what we took from it."');
+ for(let y=6;y<132;y+=9){if(y>28&&y<68)continue;L.add('ruin',.4+r()*.6,y,{w:4.5+r()*1.2,d:5,h:3+Math.floor(r()*4)});}
+ for(let y=9;y<132;y+=9){if(y>92&&y<112)continue;L.add('ruin',34.6,y+3,{w:4.6,d:5,h:3+Math.floor(r()*4)});}
+ for(let y=130,i=0;y>20;y-=7,i++){if(Math.abs(y-96)<3||Math.abs(y-56)<3)continue;L.add('car',12.4+r()*10,y,{col:i%2?'#2a2420':CARS[i%CARS.length],r:r()<.5?1:0});}
+ L.add('truck',13,122,{col:'#5a5a4a',r:1});L.add('truck',21.5,44,{col:'#4a3a2a',r:1});L.add('bus',26.2,64,{r:1});
+ L.add('carburn',14.5,112,{});L.add('carburn',22.6,70,{r:1});L.add('carwreck',16.8,36,{r:1});L.add('carwreck',13.6,84,{});
+ for(let y=12,i=0;y<132;y+=12,i++)L.add('barrel',i%2?10.6:24.6,y,{fire:true,col:'#5a2a22'});
+ for(let y=8;y<132;y+=10)L.add('tree',r()<.5?10.2:27,y+r()*3,{dead:true,s:1});
+ L.add('sand',13,28);L.add('sand',21,28);L.add('barr',13,74);L.add('barr',21,110);
+ L.add('mall',1.5,52,{col:'#3f3a33'});
+ L.add('shop',2.2,38,{col:'#3a3630',awn:'#5a2a20'});L.add('shop',2.2,66,{col:'#3a3630',awn:'#2a3a5a'});
+ L.add('ground',30.5,100,{});
+ L.add('busstop',28.5,16,{});
+ L.decal({t:'bloom',x:19,y:120,r:2.4});L.decal({t:'bloom',x:15,y:72,r:2.6});L.decal({t:'bloom',x:22,y:38,r:2.4});L.decal({t:'bloom',x:14,y:24,r:2});
+ const gates=[];for(const gy of[96,56])for(let x=12;x<26;x+=2)gates.push(L.add('gate',x,gy,{zone:gy===96?1:2,open:false}));
+ L.add('bunker',16,2.2);L.goal={x:19,y:9,r:3.5};
+ L.finish();L.start(19,136,20.3,137);
+ const zb=[[96,136,1,7],[56,96,2,9],[12,56,0,8]];
+ for(const[y0,y1,z,n]of zb)for(let i=0;i<n;i++){const[x,y]=L.freeSpot(13,25,y0+3,y1-2,.7);const t=i%5===4?'bloated':i%3===2?'stalker':'drifter';L.spawnEnemy(t,x,y,{zone:z,pr:4});}
+ L.spawn=[[14,112],[24,112],[14,76],[24,76],[14,35],[24,35],[19,128],[19,76]];
+ L.pickup('med',17,126);L.pickup('med',23,110);L.pickup('med',17,88);L.pickup('med',23,70);L.pickup('med',17,46);L.pickup('med',23,28);L.pickup('anti',21,118);L.pickup('anti',17,74);L.pickup('anti',23,40);
+ L.pickup('note',10,132,'A looping military broadcast: "All civilians proceed to Bunker 7. Coastal bombardment begins at dawn. This is not a drill."');L.pickup('note',28.5,58,'Scratched high on a wall, where somebody climbed: "It was never an accident. The ocean is taking back what we took from it."');
  let timer=200*D.timer,shellT=8,reT=14,opened={1:false,2:false};
- L.objText=()=>{const t=Math.max(0,Math.ceil(timer));return`⚠ BOMBING IN ${Math.floor(t/60)}:${String(t%60).padStart(2,'0')} — REACH THE BUNKER`;};
+ L.objText=()=>{const t=Math.max(0,Math.ceil(timer));return '⚠ BOMBING IN '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' — REACH THE BUNKER';};
  L.tick=dt=>{const p=L.player,d=L.daughter;L.hint='';timer-=dt;
   if(timer<=0){L.fail('The bombs fell before they reached the bunker.');return;}
   for(const z of[1,2])if(!opened[z]){let c=0;for(const e of L.enemies)if(!e.dead&&e.zone===z)c++;if(c===0){opened[z]=true;for(const g of gates)if(g.zone===z){g.open=true;g.solid=false;}L.rebuild();banner('BARRICADE OPEN','#5dffa0');SFX.pick();}}
-  const prog=timer/(200*D.timer);shellT-=dt;if(shellT<=0){shellT=prog>.66?9:prog>.33?6:3.8;const a=rnd(0,6.28),rr=rnd(3.5,10),x=clamp(p.x+Math.cos(a)*rr,1,29),y=clamp(p.y+Math.sin(a)*rr,1,109);L.tele.push({t:'shell',x,y,r:2.4,age:0,max:1.5});SFX.shell();}
-  reT-=dt;if(reT<=0){reT=18*D.gap/1.9;if(L.alive()<14){let zone=p.y>72?1:p.y>40?2:0,y0=zone===1?72:zone===2?40:12,y1=zone===1?106:zone===2?72:40;for(let i=0;i<2;i++){let x,y,k=0;do{[x,y]=L.freeSpot(9,21,y0+1,y1-1,.7);k++;}while(dst(x,y,p.x,p.y)<13&&k<12);if(dst(x,y,p.x,p.y)>=11)L.spawnEnemy(Math.random()<.35?'stalker':'drifter',x,y,{hunt:true,zone});}}}
-  if(p.y<12&&Math.abs(p.x-15)<5){if(dst(p.x,p.y,d.x,d.y)<6||d.carried)L.win();else L.hint='WAIT FOR NANCY';}
+  const prog=timer/(200*D.timer);shellT-=dt;if(shellT<=0){shellT=prog>.66?9:prog>.33?6:3.8;const a=rnd(0,6.28),rr=rnd(3.5,10),x=clamp(p.x+Math.cos(a)*rr,1,39),y=clamp(p.y+Math.sin(a)*rr,1,139);L.tele.push({t:'shell',x,y,r:2.4,age:0,max:1.5});SFX.shell();}
+  reT-=dt;if(reT<=0){reT=18*D.gap/1.9;if(L.alive()<16){let zone=p.y>96?1:p.y>56?2:0,y0=zone===1?96:zone===2?56:12,y1=zone===1?136:zone===2?96:56;for(let i=0;i<2;i++){let x,y,k=0;do{[x,y]=L.freeSpot(13,25,y0+1,y1-1,.7);k++;}while(dst(x,y,p.x,p.y)<13&&k<12);if(dst(x,y,p.x,p.y)>=11)L.spawnEnemy(Math.random()<.35?'stalker':'drifter',x,y,{hunt:true,zone});}}}
+  if(p.y<12&&Math.abs(p.x-19)<5){if(dst(p.x,p.y,d.x,d.y)<6||d.carried)L.win();else L.hint='WAIT FOR NANCY';}
  };
  return L;
-}BUILD.push(buildL1,buildL2,buildL3,buildL4,buildL5);
+}
+BUILD.push(buildL1,buildL2,buildL3,buildL4,buildL5);
