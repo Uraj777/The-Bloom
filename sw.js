@@ -1,5 +1,5 @@
 // Service Worker for THE BLOOM - PWA support
-const CACHE_NAME = 'bloom-v1';
+const CACHE_NAME = 'bloom-v2';
 const ASSETS = [
   '/',
   '/index.html',
@@ -22,7 +22,9 @@ const ASSETS = [
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(ASSETS))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -36,6 +38,6 @@ self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) => Promise.all(
       keys.map((key) => key !== CACHE_NAME ? caches.delete(key) : null).filter(Boolean)
-    ))
+    )).then(() => self.clients.claim())
   );
 });
