@@ -25,7 +25,9 @@
  }catch(e){}return null;}
  function aim(t){const w=worldAt(t.clientX,t.clientY),p=LV&&LV.player;
   if(!w||!p)return;
-  const dx=w[0]-p.x,dy=w[1]-p.y,d=Math.hypot(dx,dy);
+  const wx=Array.isArray(w)?w[0]:w.x, wy=Array.isArray(w)?w[1]:w.y;
+  if(!Number.isFinite(wx)||!Number.isFinite(wy))return;
+  const dx=wx-p.x,dy=wy-p.y,d=Math.hypot(dx,dy);
   if(d<.5){clearKeys();return;}
   const c=dx/d,s=dy/d;
   keys.KeyD=c>.45;keys.KeyA=c<-.45;keys.KeyS=s>.45;keys.KeyW=s<-.45;
@@ -35,8 +37,10 @@
  cv.addEventListener('touchstart',e=>{e.preventDefault();
   if(state!=='play')return;
   const t=e.changedTouches[0];
-  if(moveId===null){moveId=t.identifier;tapX=t.clientX;tapY=t.clientY;tapT=performance.now();tapped=true;}
-  else attackAt(t.clientX,t.clientY);
+  if(moveId===null){
+   moveId=t.identifier;tapX=t.clientX;tapY=t.clientY;tapT=performance.now();tapped=true;
+   aim(t);
+  } else attackAt(t.clientX,t.clientY);
  },{passive:false});
  cv.addEventListener('touchmove',e=>{e.preventDefault();
   for(const t of e.changedTouches)if(t.identifier===moveId){
