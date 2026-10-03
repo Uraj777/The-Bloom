@@ -26,9 +26,9 @@ function seg(key,opts){return`<div class="so">${opts.map(([v,l])=>`<button class
 function onoff(key){return seg(key,[[true,'ON'],[false,'OFF']]);}
 function setS(k,v){S[k]=v;saveS();applyTheme();if(k==='volume')setVol();showSettings();}
 let settingsBack='menu';
-function showSettings(){const th=THEMES;
+function showSettings(){const th=THEMES,inGame=state==='play'||state==='pause';
  showOv(`<div class="ttl" style="font-size:34px">SETTINGS</div>
- <div class="h">DIFFICULTY</div><div class="sl" style="text-align:left">${DIFFS[S.difficulty].desc}</div>
+ <div class="h">DIFFICULTY</div><div class="sl" style="text-align:left">${DIFFS[S.difficulty].desc}${inGame?' <span style="color:#ff5a5a">(Applies next run)</span>':''}</div>
  ${seg('difficulty',[['story','STORY'],['survivor','SURVIVOR'],['nightmare','NIGHTMARE']])}
  <div class="h">COLOR THEME</div>${seg('theme',Object.keys(th).map(k=>[k,th[k].name]))}
  <div class="h">GRAPHICS</div>
@@ -50,21 +50,26 @@ function showSettings(){const th=THEMES;
   <div><div class="sl">SUBTITLES</div>${onoff('subs')}</div>
   <div><div class="sl">VOLUME</div>${seg('volume',[[0,'OFF'],[.3,'LOW'],[.6,'MED'],[1,'HIGH']])}</div>
  </div>
- <div class="row" style="margin-top:14px"><button class="btn" onclick="${settingsBack==='pause'?'showPause()':'showMenu()'}">← BACK</button></div>`);}
-function showControls(){showOv(`<div class="ttl" style="font-size:34px">HOW TO PLAY</div><div class="sub">PROTECT NANCY · SURVIVE THE BLOOM</div>
- <div class="kv"><b>WASD / ARROWS</b><span>Move (screen-relative)</span><b>SPACE</b><span>Attack — auto-aims at nearby enemies (hold to keep swinging)</span><b>MOUSE CLICK</b><span>Attack toward the cursor</span><b>SHIFT</b><span>Sprint (uses stamina, makes noise)</span><b>F</b><span>Dodge roll (brief invulnerability)</span><b>R</b><span>Parry — time it against an incoming swing</span><b>Q</b><span>Use a medkit — heals you, or Nancy if she is hurt and close</span><b>E</b><span>Carry / put down Nancy (she is safe, but you cannot attack)</span><b>M</b><span>Big map</span><b>P / ESC</b><span>Pause</span></div>
- <div class="txt" style="font-size:14px">Enemies notice noise and movement. Stand still to be harder to spot. Bloated infected explode when killed — back away. Glowing bloom patches raise your infection; antidotes lower it. If it gets too high, the ending changes.</div>
+ <div class="h">ACCESSIBILITY</div>
+ <div class="sg">
+  <div><div class="sl">HIGH CONTRAST MODE</div>${onoff('accessibility')}</div>
+  <div><div class="sl">REDUCED MOTION</div>${onoff('reducedMotion')}</div>
+ </div>
+ <div class="row" style="margin-top:14px"><button class="btn" onclick="${settingsBack==='pause'?'showPause()':'showMenu()'}"> BACK</button></div>`);}
+function showControls(){showOv(`<div class="ttl" style="font-size:34px">HOW TO PLAY</div><div class="sub">PROTECT NANCY  SURVIVE THE BLOOM</div>
+ <div class="kv"><b>WASD / ARROWS</b><span>Move (screen-relative)</span><b>SPACE</b><span>Attack  auto-aims at nearby enemies (hold to keep swinging)</span><b>MOUSE CLICK</b><span>Attack toward the cursor</span><b>SHIFT</b><span>Sprint (uses stamina, makes noise)</span><b>F</b><span>Dodge roll (brief invulnerability)</span><b>R</b><span>Parry  time it against an incoming swing</span><b>Q</b><span>Use a medkit  heals you, or Nancy if she is hurt and close</span><b>E</b><span>Carry / put down Nancy (she is safe, but you cannot attack)</span><b>M</b><span>Big map</span><b>P / ESC</b><span>Pause</span></div>
+ <div class="txt" style="font-size:14px">Enemies notice noise and movement. Stand still to be harder to spot. Bloated infected explode when killed  back away. Glowing bloom patches raise your infection; antidotes lower it. If it gets too high, the ending changes.</div>
  <div class="txt" style="font-size:13px;color:#7dffb0">Halo rings on the ground show who is who: <b style="color:#3aff70">green</b> is healthy, <b style="color:#ffd34d">yellow</b> to <b style="color:#ff8a3a">orange</b> is rising infection, <b style="color:#ff4040">red</b> is infected, <b style="color:#c040ff">violet</b> is Maya.</div>
- <div class="row"><button class="btn" onclick="showMenu()">← BACK</button></div>`,'menu');}
+ <div class="row"><button class="btn" onclick="showMenu()"> BACK</button></div>`,'menu');}
 function showChapters(){const n=['HOME DEFENSE','THE BLOOM-WIFE','THE ROAD','SCHOOL SHELTER','FINAL ESCAPE'];
- showOv(`<div class="ttl" style="font-size:34px">CHAPTERS</div><div class="sub">COMPLETED CHAPTERS UNLOCK</div>${n.map((x,i)=>`<button class="btn ${i<=unlocked?'':'off'}" onclick="chapter(${i})">${i+1}. ${x}</button>`).join('')}<div class="row"><button class="btn" onclick="showMenu()">← BACK</button></div>`,'menu');}
+ showOv(`<div class="ttl" style="font-size:34px">CHAPTERS</div><div class="sub">COMPLETED CHAPTERS UNLOCK</div>${n.map((x,i)=>`<button class="btn ${i<=unlocked?'':'off'}" onclick="chapter(${i})">${i+1}. ${x}</button>`).join('')}<div class="row"><button class="btn" onclick="showMenu()"> BACK</button></div>`,'menu');}
 function chapter(i){G=newGame();G.level=i;showIntro(i);}
 function showMenu(){applyTheme();settingsBack='menu';state='menu';LV=null;$('hud').style.display='none';applyTheme();
  showOv(`<div class="menu-bg" aria-hidden="true"><div class="menu-moon"></div><div class="menu-horizon"></div><div class="menu-house"><i></i><b></b><em></em></div><div class="menu-water"></div></div>
  <div class="menu-shell">
   <img class="brand-logo" src="logo.svg" alt="THE BLOOM">
   <div class="menu-rule"></div>
-  <div class="sub">SURVIVAL HORROR · BY UTKARSH RAJ</div>
+  <div class="sub">SURVIVAL HORROR</div>
   <div class="menu-actions">
    <button class="btn" onclick="newRun()">NEW GAME</button>
    <button class="btn" onclick="showChapters()">CHAPTERS</button>
@@ -72,24 +77,24 @@ function showMenu(){applyTheme();settingsBack='menu';state='menu';LV=null;$('hud
    <button class="btn" onclick="showControls()">CONTROLS</button>
   </div>
   <div class="txt menu-quote">"The horror is not the monsters.<br>It is watching the world decay while you try to keep one person safe."</div>
-  <div class="menu-version">THE BLOOM · 2000s SURVIVAL HORROR</div>
+  <div class="menu-version">THE BLOOM  2000s SURVIVAL HORROR</div>
  </div>`);}
 function newRun(){G=newGame();showIntro(0);}
 let introIdx=0;
 function showIntro(i){introIdx=i;state='intro';const I=INTRO[i];$('hud').style.display='none';
  showOv(`<div class="sub" style="margin-top:0">CHAPTER ${i+1} OF 5</div><div class="ttl" style="font-size:54px">${I.t}</div>
- <div class="txt" id="typ"></div><div class="sub" style="color:#ffc46b">${I.tip}</div><button class="btn" onclick="introGo()">▶ BEGIN</button>`,I.scene);
+ <div class="txt" id="typ"></div><div class="sub" style="color:#ffc46b">${I.tip}</div><button class="btn" onclick="introGo()"> BEGIN</button>`,I.scene);
  let n=0;const el=$('typ');const iv=setInterval(()=>{if(state!=='intro'||!$('typ')){clearInterval(iv);return;}n+=2;el.textContent=I.txt.slice(0,n);if(n>=I.txt.length)clearInterval(iv);},28);}
 function introGo(){if(state==='intro')startLevel(introIdx);}
 function showPause(){if(state==='play')settingsBack='pause';state='pause';showOv(`<div class="ttl" style="font-size:54px">PAUSED</div><div class="sub">${INTRO[G.level].t}</div>
- <button class="btn" onclick="resume()">▶ RESUME</button><button class="btn" onclick="settingsBack='pause';showSettings()">⚙ SETTINGS</button><button class="btn" onclick="showMenu()">⌂ QUIT TO MENU</button>`);state='pause';}
+ <button class="btn" onclick="resume()"> RESUME</button><button class="btn" onclick="settingsBack='pause';showSettings()"> SETTINGS</button><button class="btn" onclick="showMenu()"> QUIT TO MENU</button>`);state='pause';}
 function resume(){if(state!=='pause'||!LV)return;$('ov').style.display='none';state='play';}
-const SHOP=[{id:'med',n:'MEDKIT',d:'+1 medkit (heals 35)',c:250,max:9},{id:'dmg',n:'REINFORCED PIPE',d:'+15% melee damage',c:400,max:3},{id:'hp',n:'ADRENALINE',d:'+15 max health',c:350,max:3},{id:'anti',n:'ANTIVIRAL',d:'−30 infection',c:300,max:99},{id:'trust',n:'COMFORT NANCY',d:'+25 trust',c:200,max:99}];
+const SHOP=[{id:'med',n:'MEDKIT',d:'+1 medkit (heals 35)',c:250,max:9},{id:'dmg',n:'REINFORCED PIPE',d:'+15% melee damage',c:400,max:3},{id:'hp',n:'ADRENALINE',d:'+15 max health',c:350,max:3},{id:'anti',n:'ANTIVIRAL',d:'\u001230 infection',c:300,max:99},{id:'trust',n:'COMFORT NANCY',d:'+25 trust',c:200,max:99}];
 function showShop(next){state='shop';$('hud').style.display='none';
  showOv(`<div class="sub" style="margin-top:0">SAFE ROOM</div><div class="ttl" style="font-size:42px">SUPPLIES</div>
- <div class="kv"><span>Points</span><b>${G.score}</b><span>Health</span><b>${Math.round(G.hp)}/${G.maxHp}</b><span>Medkits</span><b>${G.meds}</b><span>Infection</span><b>${Math.round(G.infect)}%</b></div>
+ <div class="kv"><span>Points</span><b>${G.score}</b><span>Health</span><b>${Math.round(G.hp)}/${G.maxHp}</b><span>Medkits</span><b>${G.meds}</b><span>Infection</span><b>${Math.round(G.infect)}%</b><span>Honour</span><b>${Math.round(G.honour)}</b></div>
  ${SHOP.map(s=>{const n=G.bought[s.id]||0,ok=G.score>=s.c&&n<s.max;return`<div class="shop"><div>${s.n}<small>${s.d}</small></div><span>${s.c} pts</span><button class="btn ${ok?'':'off'}" onclick="buy('${s.id}',${next})">BUY</button></div>`;}).join('')}
- <div class="row" style="margin-top:12px"><button class="btn" onclick="showIntro(${next})">CONTINUE ▶</button></div>`,'shop');}
+ <div class="row" style="margin-top:12px"><button class="btn" onclick="showIntro(${next})">CONTINUE </button></div>`,'shop');}
 function buy(id,next){const s=SHOP.find(x=>x.id===id);if(!s||G.score<s.c)return;G.score-=s.c;G.bought[id]=(G.bought[id]||0)+1;
  if(id==='med')G.meds++;else if(id==='dmg')G.dmgUp++;else if(id==='hp'){G.maxHp+=15;G.hp+=15;}else if(id==='anti')G.infect=Math.max(0,G.infect-30);else G.trust=Math.min(100,G.trust+25);SFX.pick();showShop(next);}
 function showEnding(){state='end';$('hud').style.display='none';
@@ -98,5 +103,3 @@ function showEnding(){state='end';$('hud').style.display='none';
  else if(good){name='GOOD ENDING';col='#4dffa0';txt='David and Nancy sealed the bunker door as the first bombs fell. The Bloom above them burned.<br>But spores were already drifting over the water, toward some other shore.<br><i>They survived the day. The Bloom was not finished.</i>';}
  else{name='SACRIFICE ENDING';col='#ff9a5a';txt='At the threshold, David held the last of them back alone. He pushed Nancy inside and sealed the door.<br>She pressed her hands against the cold steel until they went numb.<br><i>Every night she repeats what he told her. She will keep repeating it until the world remembers light.</i>';}
  showOv(`<div class="ttl" style="font-size:58px;color:${col}">${name}</div><div class="sub">THE BLOOM</div><div class="txt">${txt}</div>
- <div class="kv"><span>Score</span><b>${G.score}</b><span>Health</span><b>${Math.round(G.hp)}%</b><span>Infection</span><b>${Math.round(G.infect)}%</b><span>Difficulty</span><b>${DIFFS[S.difficulty].name}</b></div>
- <div class="row"><button class="btn" onclick="showMenu()">▶ PLAY AGAIN</button></div>`,'end');}
