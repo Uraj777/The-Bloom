@@ -2,8 +2,12 @@
 /* ============================================================
    THE BLOOM — isometric survival horror   (single file)
    ============================================================ */
-const clamp=(v,a,b)=>v<a?a:v>b?b:v, rnd=(a,b)=>a+Math.random()*(b-a), rint=(a,b)=>Math.floor(rnd(a,b+1));
-const dst=(a,b,c,d)=>Math.hypot(a-c,b-d), pick=a=>a[Math.floor(Math.random()*a.length)];
+/* ---------- deterministic RNG: add ?seed=abc (or ?seed=123) to the URL to reproduce exact runs ---------- */
+let _rs=Date.now()%2147483647||1;
+try{const sq=new URLSearchParams(location.search).get('seed');if(sq){_rs=[...sq].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0%2147483646||1,17);}}catch(e){}
+const srand=()=>(_rs=(_rs*1103515245+12345&2147483647)/2147483647);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v, rnd=(a,b)=>a+srand()*(b-a), rint=(a,b)=>Math.floor(rnd(a,b+1));
+const dst=(a,b,c,d)=>Math.hypot(a-c,b-d), pick=a=>a[Math.floor(srand()*a.length)];
 const angD=(a,b)=>{let d=a-b;while(d>Math.PI)d-=6.2832;while(d<-Math.PI)d+=6.2832;return d;};
 const $=id=>document.getElementById(id);
 const hx=(r,g,b)=>'#'+((1<<24)|((clamp(r,0,255)|0)<<16)|((clamp(g,0,255)|0)<<8)|(clamp(b,0,255)|0)).toString(16).slice(1);
@@ -19,7 +23,7 @@ function resize(){DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=inne
 addEventListener('resize',resize);
 
 /* ---------- settings ---------- */
-const DEF={difficulty:'survivor',theme:'bloom',gfx:'high',bright:'normal',zoom:1,particles:true,shake:true,grain:true,lighting:true,weather:true,minimap:true,subs:true,assist:true,bars:true,volume:.6};
+const DEF={difficulty:'survivor',theme:'bloom',gfx:'high',bright:'normal',zoom:1,particles:true,shake:true,grain:true,lighting:true,weather:true,minimap:true,subs:true,assist:true,bars:true,volume:.6,a11yContrast:false,reducedMotion:false};
 let S=Object.assign({},DEF);
 try{const j=localStorage.getItem('bloomS2');if(j)Object.assign(S,JSON.parse(j));}catch(e){}
 const saveS=()=>{try{localStorage.setItem('bloomS2',JSON.stringify(S));}catch(e){}};
@@ -74,7 +78,9 @@ const w2s=(x,y,z)=>[(isx(x,y)-CX)*Z+W/2,(isy(x,y,z)-CY)*Z+H/2];
 function s2w(px,py){const sx=(px-W/2)/Z+CX,sy=(py-H/2)/Z+CY,a=sx/32,b=sy/16;return{x:(a+b)/2,y:(b-a)/2};}
 const setWorld=()=>cx.setTransform(DPR*Z,0,0,DPR*Z,DPR*(W/2-CX*Z),DPR*(H/2-CY*Z));
 const setScreen=()=>cx.setTransform(DPR,0,0,DPR,0,0);
-const shake=a=>{if(S.shake)shk=Math.max(shk,a);};
+const shake=a=>{if(S.shake&&!S.reducedMotion)shk=Math.max(shk,a);};
+/* ---------- high-contrast color boost for minimap/HUD (accessibility) ---------- */
+const bright=c=>{if(!S.a11yContrast||typeof c!=='string'||c[0]!=='#')return c;const n=parseInt(c.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255,m=Math.max(r,g,b);if(m===0)return c;const k=Math.min(2.4,255/m*.92);return hx(r*k,g*k,b*k);};
 
 /* ---------- textures (procedural images) ---------- */
 const TEX={};

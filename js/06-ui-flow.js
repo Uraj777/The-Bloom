@@ -23,13 +23,19 @@ function drawScene(g,w,h,type,t){
 
 }
 function seg(key,opts){return`<div class="so">${opts.map(([v,l])=>`<button class="o ${S[key]===v?'a':''}" onclick="setS('${key}',${typeof v==='string'?`'${v}'`:v})">${l}</button>`).join('')}</div>`;}
+const segNow=(key,opts)=>{const live=(state==='play'||state==='pause')&&key==='difficulty';return`${seg(key,opts)}${live?`<div class="sl" style="color:#ffd34d;font-size:12px">⚠ DIFFICULTY APPLIES NEXT RUN — current run unchanged</div>`:''}`;};
 function onoff(key){return seg(key,[[true,'ON'],[false,'OFF']]);}
 function setS(k,v){S[k]=v;saveS();applyTheme();if(k==='volume')setVol();showSettings();}
 let settingsBack='menu';
 function showSettings(){const th=THEMES;
  showOv(`<div class="ttl" style="font-size:34px">SETTINGS</div>
  <div class="h">DIFFICULTY</div><div class="sl" style="text-align:left">${DIFFS[S.difficulty].desc}</div>
- ${seg('difficulty',[['story','STORY'],['survivor','SURVIVOR'],['nightmare','NIGHTMARE']])}
+ ${segNow('difficulty',[['story','STORY'],['survivor','SURVIVOR'],['nightmare','NIGHTMARE']])}
+ <div class="h">ACCESSIBILITY</div>
+ <div class="sg">
+  <div><div class="sl">HIGH CONTRAST MAP/HUD</div>${onoff('a11yContrast')}</div>
+  <div><div class="sl">REDUCED MOTION (no shake/flashes)</div>${onoff('reducedMotion')}</div>
+ </div>
  <div class="h">COLOR THEME</div>${seg('theme',Object.keys(th).map(k=>[k,th[k].name]))}
  <div class="h">GRAPHICS</div>
  <div class="sg">

@@ -97,7 +97,7 @@ function buildL4(){
  L.finish();L.start(26,19,27.2,19.8);
  let rem=60,wt=2,queue=[],spT=0,n=0;
  L.objText=()=>`HOLD THE SHELTER — ${Math.max(0,Math.ceil(rem))}s`;
- L.tick=dt=>{rem-=dt;wt-=dt;if(wt<=0){wt=8;const c=3+Math.floor(n++*.9)+(S.difficulty==='nightmare'?1:0)-(S.difficulty==='story'?1:0);for(let i=0;i<c;i++)queue.push(Math.random()<.14?'stalker':Math.random()<.1?'bloated':'drifter');banner('THEY ARE AT THE DOORS','#ff5a5a');}
+ L.tick=dt=>{rem-=dt;wt-=dt;if(wt<=0){wt=8;const c=3+Math.floor(n++*.9)+(S.difficulty==='nightmare'?1:0)-(S.difficulty==='story'?1:0);for(let i=0;i<c;i++)queue.push(srand()<.14?'stalker':srand()<.1?'bloated':'drifter');banner('THEY ARE AT THE DOORS','#ff5a5a');}
   if(queue.length){spT-=dt;if(spT<=0){spT=D.gap*.6;const s=pick(L.spawn);L.spawnEnemy(queue.shift(),s[0],s[1],{hunt:true});}}
   if(rem<=0){for(const e of L.enemies)if(!e.dead){e.dead=true;}say('Headlights. The convoy has arrived.',3500);L.win();}};
  return L;
@@ -128,7 +128,7 @@ function buildL5(){
   if(timer<=0){L.fail('The bombs fell before they reached the bunker.');return;}
   for(const z of[1,2])if(!opened[z]){let c=0;for(const e of L.enemies)if(!e.dead&&e.zone===z)c++;if(c===0){opened[z]=true;for(const g of gates)if(g.zone===z){g.open=true;g.solid=false;}L.rebuild();banner('BARRICADE OPEN','#5dffa0');SFX.pick();}}
   const prog=timer/(200*D.timer);shellT-=dt;if(shellT<=0){shellT=prog>.66?9:prog>.33?6:3.8;const a=rnd(0,6.28),rr=rnd(3.5,10),x=clamp(p.x+Math.cos(a)*rr,1,29),y=clamp(p.y+Math.sin(a)*rr,1,109);L.tele.push({t:'shell',x,y,r:2.4,age:0,max:1.5});SFX.shell();}
-  reT-=dt;if(reT<=0){reT=18*D.gap/1.9;if(L.alive()<14){let zone=p.y>72?1:p.y>40?2:0,y0=zone===1?72:zone===2?40:12,y1=zone===1?106:zone===2?72:40;for(let i=0;i<2;i++){let x,y,k=0;do{[x,y]=L.freeSpot(9,21,y0+1,y1-1,.7);k++;}while(dst(x,y,p.x,p.y)<13&&k<12);if(dst(x,y,p.x,p.y)>=11)L.spawnEnemy(Math.random()<.35?'stalker':'drifter',x,y,{hunt:true,zone});}}}
+  reT-=dt;if(reT<=0){reT=18*D.gap/1.9;if(L.alive()<14){let zone=p.y>72?1:p.y>40?2:0,y0=zone===1?72:zone===2?40:12,y1=zone===1?106:zone===2?72:40;for(let i=0;i<2;i++){let x,y,k=0;do{[x,y]=L.freeSpot(9,21,y0+1,y1-1,.7);k++;}while(dst(x,y,p.x,p.y)<13&&k<12);if(dst(x,y,p.x,p.y)>=11)L.spawnEnemy(srand()<.35?'stalker':'drifter',x,y,{hunt:true,zone});}}}
   if(p.y<12&&Math.abs(p.x-15)<5){if(dst(p.x,p.y,d.x,d.y)<6||d.carried)L.win();else L.hint='WAIT FOR NANCY';}
  };
  return L;

@@ -1,0 +1,15 @@
+{
+  "name": "THE BLOOM — Survival Horror",
+  "short_name": "The Bloom",
+  "description": "An isometric survival horror game. Protect Nancy from the Bloom.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#03070a",
+  "theme_color": "#03070a",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable any" }
+  ]
+}

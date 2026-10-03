@@ -24,6 +24,7 @@
   Player.prototype.attack=function(useMouse){
    this.comboN=(this.comboN||0)+1;this.comboT=1.15;
    const fin=this.comboN>=3;if(fin)this.comboN=0;
+   if(fin){G.maxCombo=(G.maxCombo||0)+1;lv.fl&&lv.fl(this.x,this.y-1,'FINISHER','#ff9a5a');}
    atkP.call(this,useMouse);
    if(fin){
     const lv=this.lv;let n=0;
