@@ -14,6 +14,7 @@ THE BLOOM is a browser-based isometric survival-horror game built with plain HTM
 - Multiple endings and local chapter progress
 - Audio, particles, lighting, and atmospheric enhancement layer
 - Refined chapter intro screens, animated pixel title screen, flickering lights, and a new bloom-mark favicon/logo
+- Full mobile support — auto-detected on touch devices: virtual joystick, action buttons, tap-to-aim. Desktop keyboard/mouse unchanged
 
 ## Run locally
 
@@ -49,6 +50,7 @@ The-Bloom/
 │   ├── 09-enhancements.js
 │   ├── 10-combat.js
 │   ├── 11-visuals.js
+│   ├── 12-mobile.js
 │   └── 08-main.js
 ├── README.md
 └── (static game files as needed)
@@ -57,7 +59,7 @@ The-Bloom/
 Important: the script order in `index.html` is intentional and should remain as-is:
 
 ```text
-01 → 02 → 03 → 04 → 05 → 06 → 07 → 09 → 10 → 11 → 08
+01 → 02 → 03 → 04 → 05 → 06 → 07 → 09 → 10 → 11 → 12 → 08
 ```
 
 The final enhancement layer is loaded before the game bootstrap so it can extend the base systems without breaking the original module flow.
@@ -76,7 +78,8 @@ The final enhancement layer is loaded before the game bootstrap so it can extend
 |---|---|
 | WASD / Arrow keys | Move |
 | SPACE | Attack / auto-aim |
-| Mouse click | Attack toward cursor |
+| Mouse click | Attack t
+oward cursor |
 | SHIFT | Sprint |
 | F | Dodge roll |
 | R | Parry (negates a hit, stuns the attacker, opens a riposte) |
@@ -86,6 +89,16 @@ The final enhancement layer is loaded before the game bootstrap so it can extend
 | M | Large map |
 | P / ESC | Pause |
 | H | Toggle help |
+
+### Touch (phones / tablets — auto-detected)
+
+| Input | Action |
+|---|---|
+| Left joystick | Move (push to the edge to sprint) |
+| ATK button (hold) | Attack — auto-aims |
+| Tap the screen | Attack toward that point |
+| DODGE / PARRY / MED / ANAYA buttons | Same as F / R / Q / E |
+| II button | Pause |
 
 ## Deployment
 
