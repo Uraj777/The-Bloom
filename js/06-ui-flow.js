@@ -58,9 +58,12 @@ function showChapters(){const n=['HOME DEFENSE','THE BLOOM-WIFE','THE ROAD','SCH
  showOv(`<div class="ttl" style="font-size:34px">CHAPTERS</div><div class="sub">COMPLETED CHAPTERS UNLOCK</div>${n.map((x,i)=>`<button class="btn ${i<=unlocked?'':'off'}" onclick="chapter(${i})">${i+1}. ${x}</button>`).join('')}<div class="row"><button class="btn" onclick="showMenu()">← BACK</button></div>`,'menu');}
 function chapter(i){G=newGame();G.level=i;showIntro(i);}
 function showMenu(){settingsBack='menu';state='menu';LV=null;$('hud').style.display='none';applyTheme();
- showOv(`<div class="ttl" style="font-size:96px">THE BLOOM</div><div class="sub">SURVIVAL HORROR · BY UTKARSH RAJ</div>
+ showOv(`<div class="menu-shell">
+ <img class="brand-logo" src="logo.svg" alt="THE BLOOM">
+ <div class="sub">SURVIVAL HORROR · BY UTKARSH RAJ</div>
  <button class="btn" onclick="newRun()">▶ NEW GAME</button><button class="btn" onclick="showChapters()">CHAPTERS</button><button class="btn" onclick="settingsBack='menu';showSettings()">⚙ SETTINGS</button><button class="btn" onclick="showControls()">CONTROLS</button>
- <div class="txt" style="font-size:13px;margin-top:22px;color:#4d6b5a">"The horror is not the monsters.<br>It is watching the world decay while you try to keep one person safe."</div>`,'menu');}
+ <div class="txt" style="font-size:13px;margin-top:22px">"The horror is not the monsters.<br>It is watching the world decay while you try to keep one person safe."</div>
+ </div>`,'menu');}
 function newRun(){G=newGame();showIntro(0);}
 let introIdx=0;
 function showIntro(i){introIdx=i;state='intro';const I=INTRO[i];$('hud').style.display='none';
