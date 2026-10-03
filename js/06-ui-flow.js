@@ -3,7 +3,7 @@ function showOv(html,scene){state=state==='play'?'pause':state;const o=$('ov');o
  if(scene){o.style.background='rgba(0,0,0,.25)';$('oc').style.display='block';const g=$('oc').getContext('2d');ovAnim=t=>{drawScene(g,$('oc').width,$('oc').height,scene,t);};}
  else{o.style.background='rgba(0,0,0,.62)';$('oc').style.display='none';ovAnim=null;}}
 function drawScene(g,w,h,type,t){
- const sky={menu:['#020a10','#0a3a3a'],home:['#050914','#1d2e42'],wife:['#0b0510','#33123f'],road:['#10080a','#4a2418'],school:['#050a14','#1a2e4a'],bunker:['#140606','#4a1a0c'],end:['#02080a','#0e3030'],dead:['#0a0000','#2a0606'],shop:['#04090a','#0e2220']}[type]||['#000','#123'];
+ const sky={menu:['#050709','#17191a'],home:['#050914','#1d2e42'],wife:['#0b0510','#33123f'],road:['#10080a','#4a2418'],school:['#050a14','#1a2e4a'],bunker:['#140606','#4a1a0c'],end:['#02080a','#0e3030'],dead:['#0a0000','#2a0606'],shop:['#04090a','#0e2220']}[type]||['#000','#123'];
  const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,sky[0]);gr.addColorStop(1,sky[1]);g.fillStyle=gr;g.fillRect(0,0,w,h);
  const r=seeded(7);g.fillStyle='#fff';for(let i=0;i<90;i++){g.globalAlpha=.15+.5*Math.abs(Math.sin(t*.8+i));g.fillRect(r()*w,r()*h*.6,1.5,1.5);}g.globalAlpha=1;
  g.fillStyle='rgba(215,232,255,.9)';g.beginPath();g.arc(w*.8,h*.2,h*.05,0,6.3);g.fill();g.fillStyle='rgba(215,232,255,.07)';g.beginPath();g.arc(w*.8,h*.2,h*.12,0,6.3);g.fill();
@@ -20,8 +20,16 @@ function drawScene(g,w,h,type,t){
  else if(type==='bunker'){g.fillStyle='#0a0504';g.fillRect(0,hz,w,h-hz);g.fillStyle='#2a2e30';g.fillRect(w*.4,hz-70,w*.2,70);g.fillStyle='#0c2a1a';g.fillRect(w*.47,hz-50,w*.06,50);
   g.fillStyle=`rgba(255,80,40,${.6+.4*Math.sin(t*6)})`;for(let k=0;k<3;k++)g.fillRect(((t*60+k*w*.35)%w),h*.15+k*20,8,3);}
  for(let i=0;i<46;i++){const x=(r()*w+t*(8+i%5*4))%w,y=h-((r()*h+t*(12+i%7*3))%h);g.fillStyle=`rgba(77,255,160,${.12+.2*Math.sin(t+i)})`;g.beginPath();g.arc(x,y,1+i%3,0,6.3);g.fill();}
-}
-function seg(key,opts){return`<div class="so">${opts.map(([v,l])=>`<button class="o ${S[key]===v?'a':''}" onclick="setS('${key}',${typeof v==='string'?`'${v}'`:v})">${l}</button>`).join('')}</div>`;}
+ if(type==='menu'){
+  // Keep the title screen restrained: desaturate the old scene art so the
+  // brand carries the visual identity instead of a wall of green.
+  g.save();
+  g.globalCompositeOperation='saturation';
+  g.fillStyle='#808080';
+  g.fillRect(0,0,w,h);
+  g.restore();
+ }
+}\nfunction seg(key,opts){return`<div class="so">${opts.map(([v,l])=>`<button class="o ${S[key]===v?'a':''}" onclick="setS('${key}',${typeof v==='string'?`'${v}'`:v})">${l}</button>`).join('')}</div>`;}
 function onoff(key){return seg(key,[[true,'ON'],[false,'OFF']]);}
 function setS(k,v){S[k]=v;saveS();applyTheme();if(k==='volume')setVol();showSettings();}
 let settingsBack='menu';
