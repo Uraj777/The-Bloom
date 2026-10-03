@@ -9,14 +9,14 @@ function buildL1(){
  L.decal({t:'rug',x:7.4,y:5.2,w:4.6,d:4.2,c1:'#6a2a2a',c2:'#8a3a3a'});L.decal({t:'rug',x:19.5,y:5.5,w:4,d:3,c1:'#2a3a6a',c2:'#3a4a8a'});
  for(let x=1;x<44;x+=4)L.decal({t:'rect',x,y:30.9,w:2,d:.2,c:'#caa24a',a:.8});
  const WC='#5d574d';
- L.wH(6,10,19,{col:WC});L.wH(12,28,19,{col:WC,win:3});L.wH(6,28,3,{col:WC,win:4});L.wV(3,19,6,{col:WC,win:4});L.wV(3,14,28,{col:WC,win:3});L.wV(16,19,28,{col:WC});
+ L.wH(6,10,19);L.wH(12,28,19,{win:3});L.wH(6,28,3,{win:4});L.wV(3,19,6,{win:4});L.wV(3,14,28,{win:3});L.wV(16,19,28);
  L.wV(3,9,16,{col:WC});L.wV(11,15,16,{col:WC});L.wV(17,19,16,{col:WC});L.wH(16,21,11,{col:WC});L.wH(23,28,11,{col:WC});
- L.add('shelf',6.5,3.4);L.add('tv',9.4,3.4);L.add('sofa',8.6,8.2,{back:'s'});L.add('table',8.7,6.2,{w:1.4,d:.7});L.add('lamp',14.8,3.6);L.add('plant',6.5,17.8);L.add('chair',13,6.5);
+ L.add('shelf',6.5,3.4);L.add('tv',9.4,3.4);L.add('sofa',8.6,8.2,{back:'s'});L.add('table',8.7,6.2,{w:1.4,d:.7});L.add('lamp',14.8,3.6);L.add('plant',6.5,17.8);L.add('chair',13,6.4);
  L.add('bed',23.6,3.4);L.add('nstand',22.9,3.4);L.add('wardrobe',17,3.4);L.add('counter',19.2,3.4,{col:'#6a4a30',w:1.4,d:.6});L.add('desk',26.6,7.6);L.add('chair',26.7,8.5);L.add('crate',18.5,7);
  L.add('counter',16.4,11.4,{w:1.4});L.add('stove',17.8,11.4);L.add('sink',18.8,11.4);L.add('fridge',23.2,11.4);L.add('counter',24.1,11.4,{w:1.6});L.add('counter',25.7,11.4,{w:1.6});
  L.add('table',18.6,14.2,{w:1.8,d:1});for(const[x,y]of[[18.9,13.4],[20,13.4],[18.9,15.3],[20,15.3]])L.add('chair',x,y);
  for(const[x,y]of[[2,4],[3,10],[2,16],[3,22],[31,3],[41,5],[36,10.5],[42,12],[30,16],[39,20],[33,23],[41,23],[25,23],[5,23.5],[18,23],[28,23.5]])L.add('tree',x,y,{s:rnd(.9,1.15)});
- for(const x of[7,14.2,16.2,20,24])L.add('bush',x,20.1);
+ for(const x of[7,14.2,16.2,20,24])L.add('bush',x,19.85);
  L.add('house',33,3,{w:6,d:5,col:'#6a5a4a'});L.add('house',33,13,{w:6,d:5,col:'#4a5a6a',roof:'#2a3040'});
  for(let x=0;x<8.5;x++)L.add('fence',x,24.5);for(let x=14;x<26;x++)L.add('fence',x,24.5);
  L.add('car',30,20.5,{col:'#8a2a2a'});L.add('car',15,30.4,{col:'#2e5a8a'});L.add('car',29,29,{col:'#6b6b2a',r:1});L.add('carburn',36,30.2,{});L.add('carwreck',4.5,26.4,{r:1});

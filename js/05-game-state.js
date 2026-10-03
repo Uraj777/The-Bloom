@@ -1,5 +1,5 @@
 /* ---------- game state & HUD ---------- */
-let G=newGame();
+let G=null;// built in boot() after settings load, so difficulty medkits are correct
 function newGame(){return{score:0,hp:100,maxHp:100,meds:DIFFS[S.difficulty].med,infect:0,trust:100,dmgUp:0,level:0,bought:{},snap:null};}
 let subTimer=0;
 function say(txt,ms,col){if(!S.subs&&!col)return;const el=$('sub');el.textContent=txt;el.style.color=col||'';el.style.opacity=1;clearTimeout(subTimer);subTimer=setTimeout(()=>el.style.opacity=0,ms||3200);}
@@ -49,4 +49,4 @@ function gameOver(msg){state='over';$('hud').style.display='none';
  <div class="txt">${msg||'You could not protect her.'}<br>The infection spreads. David's name is forgotten.</div>
  <div class="kv"><span>Score</span><b>${G.score}</b><span>Difficulty</span><b>${DIFFS[S.difficulty].name}</b></div>
  <div class="row"><button class="btn" onclick="retry()">↺ RETRY LEVEL</button><button class="btn" onclick="showMenu()">⌂ MENU</button></div>`,'dead');}
-function retry(){const s=G.snap;if(s){G.hp=s.hp<=0?G.maxHp:s.hp;G.meds=Math.max(s.meds,1);G.infect=s.infect;G.score=s.score;G.trust=s.trust;}startLevel(G.level);}
+function retry(){const s=G.snap;if(s){G.hp=s.hp<=0?G.maxHp:s.hp;G.meds=s.meds;G.infect=s.infect;G.score=s.score;G.trust=s.trust;}startLevel(G.level);}
