@@ -710,3 +710,6 @@ function showEnding(){state='end';$('hud').style.display='none';
  else if(good){name='GOOD ENDING';col='#4dffa0';txt='David and Nancy sealed the bunker door as the first bombs fell. The Bloom above them burned.<br>But spores were already drifting over the water, toward some other shore.<br><i>They survived the day. The Bloom was not finished.</i>';}
  else{name='SACRIFICE ENDING';col='#ff9a5a';txt='At the threshold, David held the last of them back alone. He pushed Nancy inside and sealed the door.<br>She pressed her hands against the cold steel until they went numb.<br><i>Every night she repeats what he told her. She will keep repeating it until the world remembers light.</i>';}
  showOv(`<div class="ttl" style="font-size:58px;color:${col}">${name}</div><div class="sub">THE BLOOM</div><div class="txt">${txt}</div>
+
+ <div class="kv"><span>Score</span><b>${G.score}</b><span>Health</span><b>${Math.round(G.hp)}%</b><span>Infection</span><b>${Math.round(G.infect)}%</b><span>Difficulty</span><b>${DIFFS[S.difficulty].name}</b></div>
+ <div class="row"><button class="btn" onclick="showMenu()">▶ PLAY AGAIN</button></div>`,"end");}
