@@ -6,7 +6,7 @@ class Player{
   let mx=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),my=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0);
   const mv=Math.hypot(mx,my);let wx=0,wy=0;if(mv){mx/=mv;my/=mv;wx=(mx+my)*.7071;wy=(-mx+my)*.7071;}
   this.still=!mv;this.sprint=!!((keys.ShiftLeft||keys.ShiftRight)&&mv&&this.stam>0&&!this.exh&&!this.carry);
-  if(this.sprint){this.stam-=26*dt;this.sd=.7;if(this.stam<=0){this.stam=0;this.exh=true;}G.honour=Math.max(0,G.honour-dt*0.1);}else{this.sd-=dt;if(this.sd<=0)this.stam=Math.min(100,this.stam+24*dt);if(this.exh&&this.stam>30)this.exh=false;}
+  if(this.sprint){this.stam-=26*dt;this.sd=.7;if(this.stam<=0){this.stam=0;this.exh=true;}}else{this.sd-=dt;if(this.sd<=0)this.stam=Math.min(100,this.stam+24*dt);if(this.exh&&this.stam>30)this.exh=false;}
   if((took('KeyF')||took('KeyC'))&&this.dodCd<=0&&this.stam>=18&&!this.carry&&this.dodT<=0){this.dodT=.28;this.dodCd=.9;this.stam-=18;this.sd=.5;this.inv=Math.max(this.inv,.3);if(mv){this.dx=wx;this.dy=wy;}else{this.dx=Math.cos(this.f);this.dy=Math.sin(this.f);}SFX.swing();for(let i=0;i<6;i++)lv.part(this.x,this.y,.2,rnd(-1,1),rnd(-1,1),.5,.35,'#9ac8ff',2,false);}
   let sp=4.1;if(this.sprint)sp*=1.6;if(this.carry)sp*=.85;
   if(this.dodT>0)lv.moveEnt(this,this.dx*10*dt,this.dy*10*dt);
@@ -14,7 +14,7 @@ class Player{
   const clickA=mouse.click&&state==='play';mouse.click=false;
   const kAtk=keys.Space||keys.KeyJ;
   if((kAtk||clickA||mouse.down)&&this.atkT<=0&&!this.carry&&this.dodT<=0)this.attack(!kAtk&&(clickA||mouse.down));
-  if(took('KeyQ'))this.useMed();if(this.dodT>0&&!G.firstDodge){G.firstDodge=true;say('Back away from exploding enemies!',3000,'#4dffa0');}
+  if(took('KeyQ'))this.useMed();
   if(took('KeyE'))this.toggleCarry();
  }
  attack(useMouse){
@@ -23,10 +23,10 @@ class Player{
   this.f=ang;this.swA=ang;this.atkT=.4;this.swT=.2;SFX.swing();lv.noise(this.x,this.y,7);
   const dmg=(30+rnd(-6,8))*(1+G.dmgUp*.15);let hits=0;
   for(const e of lv.enemies){if(e.dead||e.dying)continue;const d=dst(this.x,this.y,e.x,e.y)-e.r;if(d<1.9&&Math.abs(angD(Math.atan2(e.y-this.y,e.x-this.x),ang))<1.2){e.hurt(dmg,ang);hits++;}}
-  if(hits){shake(3);G.kills++;G.enemiesKilled++;G.combo++;G.honour=Math.min(100,G.honour+0.5);if(G.combo>G.maxCombo)G.maxCombo=G.combo;}
+  if(hits){shake(3);}
  }
  useMed(){
-  const lv=this.lv,dd=lv.daughter;if(G.meds<=0){say('No medkits left.',1800);return;}if(this.healCd>0)return;
+  const lv=this.lv,dd=lv.daughter;if(this.healCd>0)return;if(G.meds<=0){say('No medkits left.',1800);return;}
   const near=dd.carried||dst(this.x,this.y,dd.x,dd.y)<3.8,pf=G.hp/G.maxHp,df=dd.hp/dd.max;
   if(near&&df<pf&&df<.95){dd.hp=Math.min(dd.max,dd.hp+35);dd.trust=Math.min(100,dd.trust+8);lv.fl(dd.x,dd.y,'+35 NANCY','#ffd34d');}
   else if(G.hp<G.maxHp){G.hp=Math.min(G.maxHp,G.hp+35);lv.fl(this.x,this.y,'+35 HP','#7dffb0');}
@@ -37,7 +37,7 @@ class Player{
   if(this.carry){this.carry=false;dd.carried=false;dd.x=this.x-Math.cos(this.f)*.8;dd.y=this.y-Math.sin(this.f)*.8;if(lv.hitSolid(dd.x,dd.y,.25)){dd.x=this.x;dd.y=this.y;}}
   else if(dst(this.x,this.y,dd.x,dd.y)<2.6){this.carry=true;dd.carried=true;say('"I\'ve got you, Nancy. Don\'t look back."',2000);}
   else say('Nancy is too far away.',1500);}
- hurt(d,ang){const lv=this.lv;if(this.inv>0||lv.over)return;G.hp-=d;this.inv=.55;this.hurtT=.25;G.infect=Math.min(100,G.infect+1.5);G.combo=0;G.honour=Math.max(0,G.honour-0.3);SFX.hurt();shake(7);
+ hurt(d,ang){const lv=this.lv;if(this.inv>0||lv.over)return;if(!Number.isFinite(d)||d<=0)d=1;G.hp-=d;this.inv=.55;this.hurtT=.25;G.infect=Math.min(100,G.infect+1.5);SFX.hurt();shake(7);
   const h=$('hurt');h.style.opacity=1;setTimeout(()=>h.style.opacity=0,220);
   for(let i=0;i<8;i++)lv.part(this.x,this.y,.9,rnd(-2,2),rnd(-2,2),rnd(1,3),.5,'#a01010',2.5);lv.moveEnt(this,Math.cos(ang||0)*.3,Math.sin(ang||0)*.3);
   if(G.hp<=0){G.hp=0;lv.fail('David has fallen.');}}
@@ -54,7 +54,7 @@ class Daughter{
    const a=Math.atan2(ty-this.y,tx-this.x);this.f=a;lv.moveEnt(this,Math.cos(a)*sp*dt,Math.sin(a)*sp*dt);this.ph+=dt*sp*2.4;}
   else if(d<.8){const a=Math.atan2(this.y-p.y,this.x-p.x);lv.moveEnt(this,Math.cos(a)*dt*2,Math.sin(a)*dt*2);}
   if(this.trust<30&&near&&Math.random()<dt*.2)say('"Papa… I\'m scared…"',2200,'#ffd34d');}
- hurt(d){if(this.carried||this.lv.over)return;this.hp-=d;this.hT=2;this.trust=Math.max(0,this.trust-6);G.honour=Math.max(0,G.honour-1);SFX.hurt();this.lv.fl(this.x,this.y,'-'+Math.round(d),'#ffd34d');if(this.hp<=0){this.hp=0;this.lv.fail('Nancy is gone.');}}
+ hurt(d){if(this.carried||this.lv.over)return;if(!Number.isFinite(d)||d<=0)d=1;this.hp-=d;this.hT=2;this.trust=Math.max(0,this.trust-6);SFX.hurt();this.lv.fl(this.x,this.y,'-'+Math.round(d),'#ffd34d');if(this.hp<=0){this.hp=0;this.lv.fail('Nancy is gone.');}}
 }
 
 /* ---------- enemies ---------- */
@@ -119,7 +119,7 @@ class Enemy{
   for(let i=0;i<5;i++)lv.part(this.x,this.y,.9,Math.cos(ang||0)*rnd(1,3)+rnd(-1,1),Math.sin(ang||0)*rnd(1,3)+rnd(-1,1),rnd(1,3),.5,this.type==='bloated'?'#7ac03a':'#8a1010',2.5);
   if(!nokb&&this.type!=='boss'){this.stun=.22;lv.moveEnt(this,Math.cos(ang)*.35,Math.sin(ang)*.35);}
   if(this.state!=='chase'&&this.type!=='boss'){this.state='chase';this.lostT=0;this.tgt='p';}
-  lv.noise(this.x,this.y,5);if(this.hp<=0)this.die();
+  lv.noise(this.x,this.y,5);if(this.hp<=0&&!this.dying&&!this.dead)this.die();
  }
  die(){const lv=this.lv;lv.kills++;G.score+=100;lv.fl(this.x,this.y,'+100','#ffd34d');lv.stain(this.x,this.y,rnd(.8,1.3),this.type==='bloated'?'#2f5a14':'#5a0a0a');SFX.kill();
   for(let i=0;i<14;i++)lv.part(this.x,this.y,.6,rnd(-3,3),rnd(-3,3),rnd(1,4),.8,'#8a1010',rnd(2,4));
