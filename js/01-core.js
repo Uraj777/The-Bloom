@@ -1,78 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THE BLOOM</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Share+Tech+Mono&display=swap');
-:root{--acc:#4dffa0;--dim:#4d6b5a;--txt:#cfe9da}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;background:#03070a;overflow:hidden;font-family:'Share Tech Mono','Courier New',monospace;color:var(--txt);user-select:none}
-canvas#c{position:fixed;inset:0;display:block}
-#hud{position:fixed;inset:0;pointer-events:none;display:none;z-index:10}
-#hl{position:absolute;left:14px;top:12px;display:flex;flex-direction:column;gap:7px}
-.pc{display:flex;gap:10px;align-items:center;background:rgba(0,0,0,.58);border:1px solid rgba(255,255,255,.09);padding:6px 12px 6px 6px;border-radius:3px}
-.pc canvas{width:46px;height:46px;border:1px solid var(--dim);background:#000}
-.nm{font-size:10px;letter-spacing:3px;color:var(--dim)}
-.bar{width:150px;height:9px;background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.12);margin-top:3px;overflow:hidden}
-.bar.s{height:5px;width:150px}
-.bar i{display:block;height:100%;width:100%;transition:width .15s}
-#top{position:absolute;left:50%;top:10px;transform:translateX(-50%);text-align:center;min-width:360px}
-#obj{background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.09);padding:5px 18px;font-size:12px;letter-spacing:3px;color:#ffc46b}
-#boss{display:none;margin-top:6px;background:rgba(10,0,16,.8);border:1px solid #4a1a66;padding:4px 10px}
-#boss .bar{width:100%}
-#sc{position:absolute;right:16px;top:12px;text-align:right;background:rgba(0,0,0,.58);padding:6px 14px;border:1px solid rgba(255,255,255,.09)}
-#sc b{display:block;font-size:22px;color:#ffd34d}
-#sc span{font-size:9px;letter-spacing:3px;color:var(--dim)}
-#prompt{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);font-size:13px;letter-spacing:3px;color:var(--acc);text-shadow:0 0 8px #000}
-#sub{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);max-width:70%;text-align:center;font-family:'Special Elite',serif;font-size:17px;color:#e8f3ec;text-shadow:0 2px 6px #000,0 0 14px #000;opacity:0;transition:opacity .4s}
-#help{position:absolute;left:14px;bottom:14px;font-size:11px;line-height:1.7;background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.1);padding:8px 12px;color:#9cb8a8;transition:opacity .4s}
-#help b{color:var(--acc);font-weight:normal}
-#hurt{position:absolute;inset:0;opacity:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(200,0,0,.55) 100%);transition:opacity .25s}
-#banner{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font-family:'Special Elite',serif;font-size:60px;letter-spacing:6px;color:#ff5a5a;text-shadow:0 0 40px #f00a,0 4px 10px #000;opacity:0;transition:opacity .35s;white-space:nowrap}
-#ov{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6)}
-#oc{position:absolute;inset:0;display:none}
-#pn{position:relative;max-width:760px;width:92%;max-height:94vh;overflow-y:auto;text-align:center;padding:10px}
-.ttl{font-family:'Special Elite',serif;color:var(--acc);letter-spacing:8px;line-height:1;text-shadow:0 0 50px color-mix(in srgb,var(--acc) 40%,transparent),0 4px 14px #000}
-.sub{font-size:10px;color:var(--dim);letter-spacing:8px;margin:8px 0 22px}
-.btn{display:block;width:260px;margin:7px auto;padding:11px 0;border:1px solid var(--dim);background:rgba(0,0,0,.55);color:var(--txt);font-family:inherit;font-size:13px;letter-spacing:5px;cursor:pointer;transition:all .15s}
-.btn:hover{border-color:var(--acc);color:var(--acc);background:rgba(77,255,160,.08)}
-.btn.off{opacity:.35;pointer-events:none}
-.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.row .btn{width:auto;padding:11px 26px;margin:6px 4px}
-.sg{display:grid;grid-template-columns:1fr 1fr;gap:14px 26px;text-align:left;margin:10px 0}
-.sl{font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:5px}
-.so{display:flex;gap:5px;flex-wrap:wrap}
-.o{padding:5px 11px;border:1px solid #28403a;background:rgba(0,0,0,.5);color:#6f9482;font-family:inherit;font-size:11px;letter-spacing:2px;cursor:pointer}
-.o:hover{color:#fff;border-color:var(--dim)}
-.o.a{border-color:var(--acc);color:var(--acc);background:rgba(77,255,160,.1)}
-.h{font-family:'Special Elite',serif;font-size:13px;color:var(--dim);letter-spacing:6px;margin:16px 0 6px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:4px}
-.txt{font-family:'Special Elite',serif;font-size:16px;line-height:1.9;color:#b4cdbf;font-style:italic;margin:14px auto;max-width:600px}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;text-align:left;margin:10px auto;max-width:460px;font-size:13px}
-.kv b{color:var(--acc);font-weight:normal}
-.shop{display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.5);padding:8px 14px;margin:6px 0;text-align:left}
-.shop div{flex:1}.shop small{color:var(--dim);display:block;font-size:11px}
-.shop .btn{width:120px;margin:0;padding:7px 0;letter-spacing:2px}
-</style>
-</head>
-<body>
-<canvas id="c"></canvas>
-<div id="hud">
- <div id="hl">
-  <div class="pc"><canvas id="pA" width="46" height="46"></canvas><div><div class="nm">ARJUN</div><div class="bar"><i id="bA" style="background:#4dffa0"></i></div><div class="bar s"><i id="bS" style="background:#6ab4ff"></i></div></div></div>
-  <div class="pc"><canvas id="pN" width="46" height="46"></canvas><div><div class="nm">ANAYA <span id="tr"></span></div><div class="bar"><i id="bN" style="background:#ffd34d"></i></div></div></div>
-  <div class="pc" style="gap:16px"><div><div class="nm">INFECTION</div><div class="bar"><i id="bI" style="background:linear-gradient(90deg,#14a86a,#38e0ff)"></i></div></div><div id="med" class="nm" style="color:#cfe9da"></div></div>
- </div>
- <div id="top"><div id="obj"></div><div id="boss"><div class="nm" id="bn" style="color:#d68cff"></div><div class="bar"><i id="bB" style="background:linear-gradient(90deg,#7a1fb8,#ff66ff)"></i></div></div></div>
- <div id="sc"><b id="score">0</b><span>SCORE</span></div>
- <div id="prompt"></div><div id="sub"></div>
- <div id="help"></div>
- <div id="hurt"></div><div id="banner"></div>
-</div>
-<div id="ov"><canvas id="oc"></canvas><div id="pn"></div></div>
-
-<script>
 'use strict';
 /* ============================================================
    THE BLOOM — isometric survival horror   (single file)
@@ -101,3 +26,76 @@ const saveS=()=>{try{localStorage.setItem('bloomS2',JSON.stringify(S));}catch(e)
 let unlocked=0;try{unlocked=+localStorage.getItem('bloomU2')||0;}catch(e){}
 const DIFFS={
  story:{name:'STORY',col:'#5dffa0',hp:1.3,dmg:.55,spd:.82,med:4,aware:.8,gap:2.7,timer:1.4,desc:'More health, weaker enemies, more medkits. Focus on the story.'},
+ survivor:{name:'SURVIVOR',col:'#ffd34d',hp:1,dmg:1,spd:1,med:2,aware:1,gap:1.9,timer:1,desc:'The intended experience. Balanced and tense.'},
+ nightmare:{name:'NIGHTMARE',col:'#ff5a6a',hp:1.25,dmg:1.5,spd:1.2,med:1,aware:1.4,gap:1.2,timer:.8,desc:'Scarce resources. Sharper senses. No mercy.'}};
+const THEMES={
+ bloom:{name:'BLOOM',acc:'#4dffa0',tint:[190,236,206],amb:[3,14,12]},
+ ash:{name:'ASH',acc:'#ffc46b',tint:[240,222,186],amb:[16,12,6]},
+ blood:{name:'BLOOD',acc:'#ff5a6a',tint:[240,176,176],amb:[18,4,6]},
+ void:{name:'VOID',acc:'#9a7bff',tint:[196,184,248],amb:[8,5,22]}};
+function applyTheme(){document.documentElement.style.setProperty('--acc',THEMES[S.theme].acc);}
+
+/* ---------- audio ---------- */
+let AC=null,MG=null,NB=null;
+function audioInit(){
+ if(AC){if(AC.state==='suspended')AC.resume();return;}
+ try{const A=window.AudioContext||window.webkitAudioContext;if(!A||S.volume<=0)return;AC=new A();MG=AC.createGain();MG.gain.value=S.volume;MG.connect(AC.destination);
+  NB=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  const o1=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain(),l=AC.createOscillator(),lg=AC.createGain();
+  o1.frequency.value=48;o2.type='triangle';o2.frequency.value=51.5;g.gain.value=.05;l.frequency.value=.12;lg.gain.value=.03;
+  l.connect(lg);lg.connect(g.gain);o1.connect(g);o2.connect(g);g.connect(MG);o1.start();o2.start();l.start();
+  setInterval(()=>{if(state==='play'&&Math.random()<.35)tone(rnd(70,110),1.6,'sawtooth',.04,-25);},7000);
+ }catch(e){AC=null;}
+}
+function setVol(){if(MG)MG.gain.value=S.volume;}
+function tone(f,dur,type,vol,slide){if(!AC)return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(20,f+slide),t+dur);g.gain.setValueAtTime(vol||.15,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(MG);o.start(t);o.stop(t+dur+.02);}
+function nz(dur,vol,fq){if(!AC)return;const t=AC.currentTime,s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();s.buffer=NB;f.type='bandpass';f.frequency.value=fq||1000;g.gain.setValueAtTime(vol||.15,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);s.connect(f);f.connect(g);g.connect(MG);s.start(t,Math.random()*.5,dur);}
+const SFX={swing:()=>nz(.12,.1,2500),hit:()=>{tone(130,.14,'square',.1,-70);nz(.1,.12,700);},hurt:()=>tone(95,.28,'sawtooth',.18,-45),kill:()=>nz(.2,.12,400),heal:()=>tone(520,.2,'sine',.12,260),pick:()=>tone(760,.12,'triangle',.1,300),boom:()=>{nz(.8,.35,150);tone(60,.8,'sine',.3,-30);},roar:()=>tone(110,.9,'sawtooth',.16,-60),shell:()=>tone(900,.8,'sine',.05,-700),shot:()=>{nz(.12,.2,1800);tone(300,.1,'square',.08,-200);}};
+
+/* ---------- input ---------- */
+const keys={},hit={},mouse={x:0,y:0,down:false,click:false};
+const took=c=>{const v=hit[c];hit[c]=false;return !!v;};
+addEventListener('keydown',e=>{if(!e.repeat)hit[e.code]=true;keys[e.code]=true;if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Tab'].includes(e.code))e.preventDefault();audioInit();
+ if(state==='play'){if(e.code==='Escape'||e.code==='KeyP')showPause();if(e.code==='KeyM')mapBig=!mapBig;if(e.code==='KeyH')toggleHelp();}
+ else if(state==='pause'&&(e.code==='Escape'||e.code==='KeyP'))resume();
+ else if(state==='intro'&&(e.code==='Space'||e.code==='Enter'))introGo();});
+addEventListener('keyup',e=>keys[e.code]=false);
+addEventListener('blur',()=>{for(const k in keys)keys[k]=false;});
+cv.addEventListener('mousedown',e=>{if(e.button===0){mouse.down=true;mouse.click=true;}mouse.x=e.clientX;mouse.y=e.clientY;audioInit();});
+addEventListener('mouseup',()=>mouse.down=false);
+addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+addEventListener('contextmenu',e=>e.preventDefault());
+
+/* ---------- isometric math ---------- */
+const TW=64,ZH=32;
+let CX=0,CY=0,camX=0,camY=0,shk=0;
+const isx=(x,y)=>(x-y)*32, isy=(x,y,z)=>(x+y)*16-(z||0)*ZH;
+const w2s=(x,y,z)=>[(isx(x,y)-CX)*Z+W/2,(isy(x,y,z)-CY)*Z+H/2];
+function s2w(px,py){const sx=(px-W/2)/Z+CX,sy=(py-H/2)/Z+CY,a=sx/32,b=sy/16;return{x:(a+b)/2,y:(b-a)/2};}
+const setWorld=()=>cx.setTransform(DPR*Z,0,0,DPR*Z,DPR*(W/2-CX*Z),DPR*(H/2-CY*Z));
+const setScreen=()=>cx.setTransform(DPR,0,0,DPR,0,0);
+const shake=a=>{if(S.shake)shk=Math.max(shk,a);};
+
+/* ---------- textures (procedural images) ---------- */
+const TEX={};
+const mkc=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
+function tile(name,cols,det){
+ TEX[name]=cols.map((col,v)=>{const c=mkc(66,34),g=c.getContext('2d'),r=seeded(97+v*31+name.length*7);
+  g.beginPath();g.moveTo(33,0);g.lineTo(66,17);g.lineTo(33,34);g.lineTo(0,17);g.closePath();g.clip();
+  g.fillStyle=col;g.fillRect(0,0,66,34);det(g,r,v);
+  for(let i=0;i<50;i++){g.fillStyle=r()<.5?'rgba(0,0,0,.09)':'rgba(255,255,255,.05)';g.fillRect(r()*66,r()*34,1+r()*2,1);}
+  return c;});
+}
+function makeTextures(){
+ const ln=(g,a,b,c,d,s)=>{g.strokeStyle=s;g.lineWidth=1;g.beginPath();g.moveTo(a,b);g.lineTo(c,d);g.stroke();};
+ const planks=c=>(g,r)=>{for(let k=-4;k<10;k++)ln(g,-4,k*6,72,k*6+38,c);for(let k=0;k<8;k++){g.fillStyle='rgba(255,255,255,.04)';g.fillRect(r()*60,r()*30,8,2);}};
+ tile('wood',['#6a4a30','#5f4129'],planks('rgba(0,0,0,.3)'));
+ tile('dark',['#3d2b35','#34242c'],planks('rgba(0,0,0,.4)'));
+ tile('carpet',['#3d4862','#38425c'],(g,r)=>{for(let i=0;i<90;i++){g.fillStyle='rgba(255,255,255,.05)';g.fillRect(r()*66,r()*34,1,1);}});
+ tile('tile',['#b4b8b0','#9a9f97'],(g,r)=>{g.strokeStyle='rgba(0,0,0,.2)';g.beginPath();g.moveTo(33,2);g.lineTo(64,17);g.lineTo(33,32);g.lineTo(2,17);g.closePath();g.stroke();});
+ tile('grass',['#2c4d30','#315636'],(g,r)=>{for(let i=0;i<46;i++){const x=r()*66,y=r()*34;g.strokeStyle=r()<.5?'#3f7040':'#1f3a24';g.beginPath();g.moveTo(x,y);g.lineTo(x+(r()-.5)*2,y-2-r()*3);g.stroke();}});
+ tile('road',['#2c2d31','#27282c'],(g,r)=>{for(let i=0;i<70;i++){g.fillStyle='rgba(255,255,255,.05)';g.fillRect(r()*66,r()*34,1,1);}ln(g,10,20,30,26,'rgba(0,0,0,.35)');});
+ tile('walk',['#5d5e5b','#535452'],(g)=>{ln(g,33,0,33,34,'rgba(0,0,0,.2)');ln(g,0,17,66,17,'rgba(0,0,0,.2)');});
+ tile('lino',['#8c8f7e','#7d8071'],(g)=>{g.strokeStyle='rgba(0,0,0,.18)';g.beginPath();g.moveTo(33,3);g.lineTo(62,17);g.lineTo(33,31);g.lineTo(4,17);g.closePath();g.stroke();});
+ tile('waste',['#3d3229','#362c24'],(g,r)=>{for(let i=0;i<9;i++){g.fillStyle='rgba(0,0,0,.25)';g.beginPath();g.arc(r()*66,r()*34,1+r()*2,0,6.3);g.fill();}});
+}
