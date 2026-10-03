@@ -51,9 +51,10 @@ function showSettings(){const th=THEMES;
   <div><div class="sl">VOLUME</div>${seg('volume',[[0,'OFF'],[.3,'LOW'],[.6,'MED'],[1,'HIGH']])}</div>
  </div>
  <div class="row" style="margin-top:14px"><button class="btn" onclick="${settingsBack==='pause'?'showPause()':'showMenu()'}">← BACK</button></div>`);}
-function showControls(){showOv(`<div class="ttl" style="font-size:34px">HOW TO PLAY</div><div class="sub">PROTECT ANAYA · SURVIVE THE BLOOM</div>
- <div class="kv"><b>WASD / ARROWS</b><span>Move (screen-relative)</span><b>SPACE</b><span>Attack — auto-aims at nearby enemies (hold to keep swinging)</span><b>MOUSE CLICK</b><span>Attack toward the cursor</span><b>SHIFT</b><span>Sprint (uses stamina, makes noise)</span><b>F</b><span>Dodge roll (brief invulnerability)</span><b>Q</b><span>Use a medkit — heals you, or Anaya if she is hurt and close</span><b>E</b><span>Carry / put down Anaya (she is safe, but you cannot attack)</span><b>M</b><span>Big map</span><b>P / ESC</b><span>Pause</span></div>
+function showControls(){showOv(`<div class="ttl" style="font-size:34px">HOW TO PLAY</div><div class="sub">PROTECT NANCY · SURVIVE THE BLOOM</div>
+ <div class="kv"><b>WASD / ARROWS</b><span>Move (screen-relative)</span><b>SPACE</b><span>Attack — auto-aims at nearby enemies (hold to keep swinging)</span><b>MOUSE CLICK</b><span>Attack toward the cursor</span><b>SHIFT</b><span>Sprint (uses stamina, makes noise)</span><b>F</b><span>Dodge roll (brief invulnerability)</span><b>R</b><span>Parry — time it against an incoming swing</span><b>Q</b><span>Use a medkit — heals you, or Nancy if she is hurt and close</span><b>E</b><span>Carry / put down Nancy (she is safe, but you cannot attack)</span><b>M</b><span>Big map</span><b>P / ESC</b><span>Pause</span></div>
  <div class="txt" style="font-size:14px">Enemies notice noise and movement. Stand still to be harder to spot. Bloated infected explode when killed — back away. Glowing bloom patches raise your infection; antidotes lower it. If it gets too high, the ending changes.</div>
+ <div class="txt" style="font-size:13px;color:#7dffb0">Halo rings on the ground show who is who: <b style="color:#3aff70">green</b> is healthy, <b style="color:#ffd34d">yellow</b> to <b style="color:#ff8a3a">orange</b> is rising infection, <b style="color:#ff4040">red</b> is infected, <b style="color:#c040ff">violet</b> is Maya.</div>
  <div class="row"><button class="btn" onclick="showMenu()">← BACK</button></div>`,'menu');}
 function showChapters(){const n=['HOME DEFENSE','THE BLOOM-WIFE','THE ROAD','SCHOOL SHELTER','FINAL ESCAPE'];
  showOv(`<div class="ttl" style="font-size:34px">CHAPTERS</div><div class="sub">COMPLETED CHAPTERS UNLOCK</div>${n.map((x,i)=>`<button class="btn ${i<=unlocked?'':'off'}" onclick="chapter(${i})">${i+1}. ${x}</button>`).join('')}<div class="row"><button class="btn" onclick="showMenu()">← BACK</button></div>`,'menu');}
@@ -77,13 +78,13 @@ function newRun(){G=newGame();showIntro(0);}
 let introIdx=0;
 function showIntro(i){introIdx=i;state='intro';const I=INTRO[i];$('hud').style.display='none';
  showOv(`<div class="sub" style="margin-top:0">CHAPTER ${i+1} OF 5</div><div class="ttl" style="font-size:54px">${I.t}</div>
- <div class="txt" id="typ"></div><div class="sub" style="color:#ffc46b">${I.tip}</div><button class="btn" onclick="introGo()">▶ BEGIN [SPACE]</button>`,I.scene);
+ <div class="txt" id="typ"></div><div class="sub" style="color:#ffc46b">${I.tip}</div><button class="btn" onclick="introGo()">▶ BEGIN</button>`,I.scene);
  let n=0;const el=$('typ');const iv=setInterval(()=>{if(state!=='intro'||!$('typ')){clearInterval(iv);return;}n+=2;el.textContent=I.txt.slice(0,n);if(n>=I.txt.length)clearInterval(iv);},28);}
 function introGo(){if(state==='intro')startLevel(introIdx);}
 function showPause(){if(state==='play')settingsBack='pause';state='pause';showOv(`<div class="ttl" style="font-size:54px">PAUSED</div><div class="sub">${INTRO[G.level].t}</div>
  <button class="btn" onclick="resume()">▶ RESUME</button><button class="btn" onclick="settingsBack='pause';showSettings()">⚙ SETTINGS</button><button class="btn" onclick="showMenu()">⌂ QUIT TO MENU</button>`);state='pause';}
 function resume(){if(state!=='pause'||!LV)return;$('ov').style.display='none';state='play';}
-const SHOP=[{id:'med',n:'MEDKIT',d:'+1 medkit (heals 35)',c:250,max:9},{id:'dmg',n:'REINFORCED PIPE',d:'+15% melee damage',c:400,max:3},{id:'hp',n:'ADRENALINE',d:'+15 max health',c:350,max:3},{id:'anti',n:'ANTIVIRAL',d:'−30 infection',c:300,max:99},{id:'trust',n:'COMFORT ANAYA',d:'+25 trust',c:200,max:99}];
+const SHOP=[{id:'med',n:'MEDKIT',d:'+1 medkit (heals 35)',c:250,max:9},{id:'dmg',n:'REINFORCED PIPE',d:'+15% melee damage',c:400,max:3},{id:'hp',n:'ADRENALINE',d:'+15 max health',c:350,max:3},{id:'anti',n:'ANTIVIRAL',d:'−30 infection',c:300,max:99},{id:'trust',n:'COMFORT NANCY',d:'+25 trust',c:200,max:99}];
 function showShop(next){state='shop';$('hud').style.display='none';
  showOv(`<div class="sub" style="margin-top:0">SAFE ROOM</div><div class="ttl" style="font-size:42px">SUPPLIES</div>
  <div class="kv"><span>Points</span><b>${G.score}</b><span>Health</span><b>${Math.round(G.hp)}/${G.maxHp}</b><span>Medkits</span><b>${G.meds}</b><span>Infection</span><b>${Math.round(G.infect)}%</b></div>
@@ -93,9 +94,9 @@ function buy(id,next){const s=SHOP.find(x=>x.id===id);if(!s||G.score<s.c)return;
  if(id==='med')G.meds++;else if(id==='dmg')G.dmgUp++;else if(id==='hp'){G.maxHp+=15;G.hp+=15;}else if(id==='anti')G.infect=Math.max(0,G.infect-30);else G.trust=Math.min(100,G.trust+25);SFX.pick();showShop(next);}
 function showEnding(){state='end';$('hud').style.display='none';
  const dark=G.infect>=85,good=!dark&&G.hp>30;let name,col,txt;
- if(dark){name='DARK ENDING';col='#9a7bff';txt='Inside the bunker the fever finally broke him. Anaya watched her father\'s eyes turn the color of the sea.<br>He told her to run. She did — and did not look back.<br><i>"I love you, Baba."</i>';}
- else if(good){name='GOOD ENDING';col='#4dffa0';txt='Arjun and Anaya sealed the bunker door as the bombs fell. The Bloom above them burned.<br>But spores were already drifting over the ocean, toward distant shores.<br><i>Humanity survived the day. The Bloom had not finished.</i>';}
- else{name='SACRIFICE ENDING';col='#ff9a5a';txt='At the threshold, Arjun held the last of them back alone. He pushed Anaya inside and sealed the door.<br>She pressed her hands against the cold steel.<br><i>She would repeat what he told her, every night, until the world remembered light.</i>';}
+ if(dark){name='DARK ENDING';col='#9a7bff';txt='The fever broke inside the bunker, and it broke him too. Nancy watched her father\'s eyes turn the color of the sea.<br>He told her to run. She ran. She did not look back.<br><i>"I love you, Papa."</i>';}
+ else if(good){name='GOOD ENDING';col='#4dffa0';txt='David and Nancy sealed the bunker door as the first bombs fell. The Bloom above them burned.<br>But spores were already drifting over the water, toward some other shore.<br><i>They survived the day. The Bloom was not finished.</i>';}
+ else{name='SACRIFICE ENDING';col='#ff9a5a';txt='At the threshold, David held the last of them back alone. He pushed Nancy inside and sealed the door.<br>She pressed her hands against the cold steel until they went numb.<br><i>Every night she repeats what he told her. She will keep repeating it until the world remembers light.</i>';}
  showOv(`<div class="ttl" style="font-size:58px;color:${col}">${name}</div><div class="sub">THE BLOOM</div><div class="txt">${txt}</div>
  <div class="kv"><span>Score</span><b>${G.score}</b><span>Health</span><b>${Math.round(G.hp)}%</b><span>Infection</span><b>${Math.round(G.infect)}%</b><span>Difficulty</span><b>${DIFFS[S.difficulty].name}</b></div>
  <div class="row"><button class="btn" onclick="showMenu()">▶ PLAY AGAIN</button></div>`,'end');}

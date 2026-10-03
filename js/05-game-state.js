@@ -15,7 +15,7 @@ function hud(lv){
  setW('bA',f*100);$('bA').style.background=f>.6?'#4dffa0':f>.3?'#ffd34d':'#ff4a4a';setW('bS',p.stam);setW('bN',d.hp/d.max*100);setW('bI',G.infect);
  setT('tr','TRUST '+Math.round(d.trust));setT('med','✚ ×'+G.meds+'  [Q]');setT('score',G.score);setT('obj',lv.objText());
  const b=lv.boss;$('boss').style.display=b&&b.awake&&!b.dead?'block':'none';if(b&&b.awake){setT('bn','MAYA — THE BLOOM-WIFE');setW('bB',Math.max(0,b.hp/b.max*100));}
- let pr='';if(lv.hint)pr=lv.hint;else if(p.carry)pr='[E] Put Anaya down';else if(!d.carried&&dst(p.x,p.y,d.x,d.y)<2.6)pr='[E] Carry Anaya';setT('prompt',pr);
+ let pr='';if(lv.hint)pr=lv.hint;else if(p.carry)pr='[E] Put Nancy down';else if(!d.carried&&dst(p.x,p.y,d.x,d.y)<2.6)pr='[E] Carry Nancy';setT('prompt',pr);
  $('hurt').style.boxShadow=G.hp<30?`inset 0 0 ${80+30*Math.sin(lv.t*5)}px rgba(160,0,0,.6)`:'none';
 }
 function portraits(){
@@ -26,11 +26,11 @@ function portraits(){
 /* ---------- level flow ---------- */
 const BUILD=[];
 const INTRO=[
- {t:'HOME DEFENSE',scene:'home',txt:'Night. The power is out and sirens echo down the street. Maya has not come back from the shore. Arjun holds Anaya close and listens — something is moving outside.',tip:'Hold the house for three waves. Keep Anaya near you.'},
- {t:'THE BLOOM-WIFE',scene:'wife',txt:'Maya came home. She is not herself. The Bloom has taken her body — but somewhere inside, she still knows your name.',tip:'Dodge her charges. A boss that slams a wall is stunned.'},
- {t:'THE ROAD',scene:'road',txt:'The way to the evacuation point is a graveyard of stalled cars. The infected wander in the dark. Stay quiet. Stay together.',tip:'Sprinting is loud. Standing still makes you harder to notice.'},
- {t:'SCHOOL SHELTER',scene:'school',txt:'A school turned shelter. Frightened survivors huddle in the dark, and one tired officer guards the door. Hold the line until the convoy comes.',tip:'Survive 60 seconds. The officer will help.'},
- {t:'FINAL ESCAPE',scene:'bunker',txt:'The military will bomb the coast. The bunker is the only way out. Clear each barricade before the clock runs out — and do not let go of her hand.',tip:'Watch for red markers on the ground — shells are coming.'}];
+ {t:'HOME DEFENSE',scene:'home',txt:'The power died an hour after dark. Your wife went to the shore to look at the dead fish, and she never came back. David keeps Nancy behind him and tells her it\'s just the wind outside. It isn\'t.',tip:'Hold the house for three waves. Keep Nancy close.'},
+ {t:'THE BLOOM-WIFE',scene:'wife',txt:'Maya is home. Whatever knocked on the door wears her face. The Bloom took her body, but a piece of her is still in there — and it still knows your name.',tip:'Dodge her charges. When she slams into a wall, she is stunned. Strike then.'},
+ {t:'THE ROAD',scene:'road',txt:'The highway to the evacuation point is packed with cars that never made it. Keep Nancy quiet, keep her close. The dead don\'t sleep tonight.',tip:'Sprinting is loud. Standing still makes you harder to notice.'},
+ {t:'SCHOOL SHELTER',scene:'school',txt:'Someone painted HELP on the school roof, and people came. Too many people. Now a tired officer guards the door, and everyone is waiting for the same convoy.',tip:'Survive 60 seconds. The officer will hold the line with you.'},
+ {t:'FINAL ESCAPE',scene:'bunker',txt:'The air force is going to burn the coast at dawn. Bunker 7 is the only way out. Clear each barricade before the clock runs out — and whatever you do, don\'t let go of her hand.',tip:'Watch for red markers on the ground — shells are coming.'}];
 function startLevel(i){
  G.level=i;const D=DIFFS[S.difficulty];
  G.hp=Math.min(G.maxHp,G.hp+(i>0?25:0));if(i===0&&!G.snap){G.hp=G.maxHp;}
@@ -38,14 +38,14 @@ function startLevel(i){
  LV=BUILD[i]();state='play';mapBig=false;
  $('ov').style.display='none';$('hud').style.display='block';ovAnim=null;
  portraits();Object.keys(cache).forEach(k=>delete cache[k]);
- $('help').innerHTML='<b>WASD / ARROWS</b> move &nbsp; <b>SPACE</b> attack (or click)<br><b>SHIFT</b> sprint &nbsp; <b>F</b> dodge roll &nbsp; <b>Q</b> medkit<br><b>E</b> carry Anaya &nbsp; <b>M</b> map &nbsp; <b>P</b> pause &nbsp; <b>H</b> hide help';
+ $('help').innerHTML=document.body.classList.contains('mobile')?'<b>TOUCH &amp; HOLD</b> move toward your finger &nbsp; <b>TAP</b> attack<br><b>MAP</b> big map &nbsp; <b>II</b> pause &nbsp; <b>H</b> hide help':'<b>WASD / ARROWS</b> move &nbsp; <b>SPACE</b> attack (or click)<br><b>SHIFT</b> sprint &nbsp; <b>F</b> dodge roll &nbsp; <b>Q</b> medkit<br><b>E</b> carry Nancy &nbsp; <b>M</b> map &nbsp; <b>P</b> pause &nbsp; <b>H</b> hide help';
  helpShown=i===0?12:5;$('help').style.opacity=1;
  banner(INTRO[i].t,THEMES[S.theme].acc);say(INTRO[i].tip,4500);
 }
 function levelDone(){G.trust=LV.daughter.trust;unlocked=Math.max(unlocked,G.level+1);try{localStorage.setItem('bloomU2',unlocked);}catch(e){}if(G.level>=4)showEnding();else showShop(G.level+1);}
 function gameOver(msg){state='over';$('hud').style.display='none';
  showOv(`<div class="ttl" style="font-size:68px;color:#ff4a4a;text-shadow:0 0 40px #f00a">GAME OVER</div><div class="sub" style="color:#7a3a3a">THE BLOOM HAS CONSUMED THEM</div>
- <div class="txt">${msg||'You could not protect her.'}<br>The infection spreads. Arjun's name is forgotten.</div>
+ <div class="txt">${msg||'You could not protect her.'}<br>The infection spreads. David's name is forgotten.</div>
  <div class="kv"><span>Score</span><b>${G.score}</b><span>Difficulty</span><b>${DIFFS[S.difficulty].name}</b></div>
  <div class="row"><button class="btn" onclick="retry()">↺ RETRY LEVEL</button><button class="btn" onclick="showMenu()">⌂ MENU</button></div>`,'dead');}
 function retry(){const s=G.snap;if(s){G.hp=s.hp<=0?G.maxHp:s.hp;G.meds=Math.max(s.meds,1);G.infect=s.infect;G.score=s.score;G.trust=s.trust;}startLevel(G.level);}

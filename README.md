@@ -1,6 +1,6 @@
 # THE BLOOM
 
-THE BLOOM is a browser-based isometric survival-horror game built with plain HTML, CSS, and JavaScript. You play as Arjun, protecting his daughter Anaya while a fungal infection spreads across the coast and the city collapses into danger.
+THE BLOOM is a browser-based isometric survival-horror game built with plain HTML, CSS, and JavaScript. You play as David, protecting his daughter Nancy while a fungal infection spreads across the coast and the city collapses into danger.
 
 ## Features
 
@@ -9,12 +9,14 @@ THE BLOOM is a browser-based isometric survival-horror game built with plain HTM
 - Combo system with 3rd-hit finishers, heavy attacks, and parry-riposte counters
 - Telegraphed enemy attacks — red ground rings warn you before a strike
 - Infection system and antidote mechanics
-- Companion rescue logic for Anaya
+- Companion rescue logic for Nancy
 - Multiple enemy types, boss encounter, and chapter progression
 - Multiple endings and local chapter progress
 - Audio, particles, lighting, and atmospheric enhancement layer
 - Refined chapter intro screens, animated pixel title screen, flickering lights, and a new bloom-mark favicon/logo
-- Full mobile support — auto-detected on touch devices: virtual joystick, action buttons, tap-to-aim. Desktop keyboard/mouse unchanged
+- Full mobile support — auto-detected on touch devices: touch and hold anywhere to walk toward your finger, quick tap to attack, on-screen buttons (DODGE / PARRY / MED / NANCY / MAP / pause). Desktop keyboard and mouse are unchanged
+- Halo rings under every being: green (healthy), yellow to orange (rising infection), red (infected), violet (Maya)
+- Wrecked and burning vehicles scattered through levels 1, 3 and 5
 
 ## Run locally
 
@@ -69,6 +71,7 @@ The final enhancement layer is loaded before the game bootstrap so it can extend
 1. HOME DEFENSE
 2. THE BLOOM-WIFE
 3. THE ROAD
+
 4. SCHOOL SHELTER
 5. FINAL ESCAPE
 
@@ -85,7 +88,7 @@ oward cursor |
 | R | Parry (negates a hit, stuns the attacker, opens a riposte) |
 | K / Right click | Heavy swing (wide arc, big knockback, costs stamina) |
 | Q | Use medkit |
-| E | Carry / put down Anaya |
+| E | Carry / put down Nancy |
 | M | Large map |
 | P / ESC | Pause |
 | H | Toggle help |
@@ -94,10 +97,11 @@ oward cursor |
 
 | Input | Action |
 |---|---|
-| Left joystick | Move (push to the edge to sprint) |
-| ATK button (hold) | Attack — auto-aims |
-| Tap the screen | Attack toward that point |
-| DODGE / PARRY / MED / ANAYA buttons | Same as F / R / Q / E |
+| Touch and hold anywhere | Walk toward your finger (hold far away to sprint) |
+| Quick tap | Attack toward that spot |
+| Second finger tap | Attack while moving |
+| DODGE / PARRY / MED / NANCY buttons | Same as F / R / Q / E |
+| MAP button | Open / close the big map |
 | II button | Pause |
 
 ## Deployment
