@@ -712,4 +712,4 @@ function showEnding(){state='end';$('hud').style.display='none';
  showOv(`<div class="ttl" style="font-size:58px;color:${col}">${name}</div><div class="sub">THE BLOOM</div><div class="txt">${txt}</div>
 
  <div class="kv"><span>Score</span><b>${G.score}</b><span>Health</span><b>${Math.round(G.hp)}%</b><span>Infection</span><b>${Math.round(G.infect)}%</b><span>Difficulty</span><b>${DIFFS[S.difficulty].name}</b></div>
- <div class="row"><button class="btn" onclick="showMenu()">▶ PLAY AGAIN</button></div>`,"end");}
+ <div class="row"><button class="btn" onclick="showMenu()">▶ PLAY AGAIN</button></div>`,'end');}
