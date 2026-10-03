@@ -43,7 +43,7 @@ canvas#c{position:fixed;inset:0;display:block}
 
 /* ---------- pixel-era title screen ---------- */
 #ov.menu-screen{background:#07090b!important}
-.menu-bg{position:absolute;inset:0;overflow:hidden;background:#07090b;image-rendering:pixelated}
+.menu-bg{position:fixed;inset:0;overflow:hidden;background:#07090b;image-rendering:pixelated}
 .menu-bg:before{content:"";position:absolute;inset:0;background:
  repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 4px),
  linear-gradient(#080b0f 0 58%,#11151a 58% 60%,#0a0d10 60% 100%)}
