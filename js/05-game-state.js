@@ -1,26 +1,51 @@
-  if(this.trust<30&&near&&Math.random()<dt*.2)say('"Baba… I\'m scared…"',2200,'#ffd34d');}
- hurt(d){if(this.carried||this.lv.over)return;this.hp-=d;this.hT=2;this.trust=Math.max(0,this.trust-6);SFX.hurt();this.lv.fl(this.x,this.y,'-'+Math.round(d),'#ffd34d');if(this.hp<=0){this.hp=0;this.lv.fail('Anaya is gone.');}}
+/* ---------- game state & HUD ---------- */
+let G=newGame();
+function newGame(){return{score:0,hp:100,maxHp:100,meds:DIFFS[S.difficulty].med,infect:0,trust:100,dmgUp:0,level:0,bought:{},snap:null};}
+let subTimer=0;
+function say(txt,ms,col){if(!S.subs&&!col)return;const el=$('sub');el.textContent=txt;el.style.color=col||'';el.style.opacity=1;clearTimeout(subTimer);subTimer=setTimeout(()=>el.style.opacity=0,ms||3200);}
+let banTimer=0;
+function banner(txt,col){const b=$('banner');b.textContent=txt;b.style.color=col||'#ff5a5a';b.style.opacity=1;clearTimeout(banTimer);banTimer=setTimeout(()=>b.style.opacity=0,1700);}
+const cache={};
+function setT(id,v){if(cache[id]!==v){cache[id]=v;$(id).textContent=v;}}
+function setW(id,v){const s=v.toFixed(1)+'%';if(cache[id]!==s){cache[id]=s;$(id).style.width=s;}}
+let helpShown=0;
+function toggleHelp(){helpShown=helpShown>0?0:99;$('help').style.opacity=helpShown?1:0;}
+function hud(lv){
+ const p=lv.player,d=lv.daughter,f=G.hp/G.maxHp;
+ setW('bA',f*100);$('bA').style.background=f>.6?'#4dffa0':f>.3?'#ffd34d':'#ff4a4a';setW('bS',p.stam);setW('bN',d.hp/d.max*100);setW('bI',G.infect);
+ setT('tr','TRUST '+Math.round(d.trust));setT('med','✚ ×'+G.meds+'  [Q]');setT('score',G.score);setT('obj',lv.objText());
+ const b=lv.boss;$('boss').style.display=b&&b.awake&&!b.dead?'block':'none';if(b&&b.awake){setT('bn','MAYA — THE BLOOM-WIFE');setW('bB',Math.max(0,b.hp/b.max*100));}
+ let pr='';if(lv.hint)pr=lv.hint;else if(p.carry)pr='[E] Put Anaya down';else if(!d.carried&&dst(p.x,p.y,d.x,d.y)<2.6)pr='[E] Carry Anaya';setT('prompt',pr);
+ $('hurt').style.boxShadow=G.hp<30?`inset 0 0 ${80+30*Math.sin(lv.t*5)}px rgba(160,0,0,.6)`:'none';
+}
+function portraits(){
+ let g=$('pA').getContext('2d');g.fillStyle='#0b1411';g.fillRect(0,0,46,46);g.fillStyle='#35567e';g.fillRect(5,34,36,12);g.fillStyle='#e0b08a';g.fillRect(15,10,16,22);g.fillStyle='#2a1c10';g.fillRect(13,6,20,8);g.fillRect(13,10,3,10);g.fillRect(30,10,3,10);g.fillStyle='#141414';g.fillRect(18,19,3,3);g.fillRect(26,19,3,3);g.fillStyle='rgba(40,30,20,.5)';g.fillRect(16,27,14,4);
+ g=$('pN').getContext('2d');g.fillStyle='#0b1411';g.fillRect(0,0,46,46);g.fillStyle='#e8c23a';g.fillRect(8,34,30,12);g.fillStyle='#f0c8a0';g.fillRect(14,11,18,20);g.fillStyle='#5a3418';g.fillRect(12,7,22,8);g.fillRect(10,10,5,20);g.fillRect(31,10,5,20);g.fillStyle='#141414';g.fillRect(18,20,3,3);g.fillRect(26,20,3,3);g.fillStyle='#c0605a';g.fillRect(21,26,5,2);
 }
 
-/* ---------- enemies ---------- */
-const ET={
- drifter:{hp:55,spd:1.7,dmg:8,r:.3,sense:7,reach:.5,windT:.38,cd:1.1,sc:1},
- stalker:{hp:38,spd:2.7,dmg:11,r:.3,sense:9,reach:.5,windT:.24,cd:1,sc:1.05},
- bloated:{hp:95,spd:1.05,dmg:14,r:.5,sense:6,reach:.6,windT:.5,cd:1.4,sc:1.3},
- boss:{hp:430,spd:2.2,dmg:20,r:.55,sense:99,reach:.9,windT:.5,cd:1.2,sc:1.4}};
-const BOSSLINES=['"Arjun… it hurts…"','"Where is Anaya?"','"I can hear the ocean…"','"Don\'t look at me…"','"Please… stop me…"','"I was only trying to help them…"'];
-class Enemy{
- constructor(lv,type,x,y,o){o=o||{};const T0=ET[type],D=DIFFS[S.difficulty];
-  Object.assign(this,{lv,type,x,y,r:T0.r,hp:T0.hp*D.hp,spd:T0.spd*D.spd,dmg:T0.dmg*D.dmg,sense:T0.sense,reach:T0.reach,windT:T0.windT,cdMax:T0.cd,sc:T0.sc,state:'patrol',f:rnd(0,6.28),ph:rnd(0,6),cd:rnd(0,.8),wind:0,hurtT:0,stun:0,dead:false,dying:false,fuse:0,hx:x,hy:y,pr:o.pr||3.5,pauseT:rnd(0,2),wp:null,wpT:0,hunt:!!o.hunt,zone:o.zone||0,tgt:'p',lostT:0,ax:x,ay:y,searchT:0,lunge:0,lungeCd:rnd(1,3),seed:Math.random()*10,shirt:pick(['#6b4a3a','#4a5a6b','#5a4a5a','#6b6b4a','#3f5f4f','#7a5a3a'])});
-  this.max=this.hp;if(type==='boss'){Object.assign(this,{bs:'idle',bt:0,phase:1,abT:4,awake:false,dirx:0,diry:1,lineT:9,hitDone:false});}}
- goto(x,y,sp,dt){const a=Math.atan2(y-this.y,x-this.x);this.f+=angD(a,this.f)*Math.min(1,dt*10);this.lv.moveEnt(this,Math.cos(a)*sp*dt,Math.sin(a)*sp*dt);this.ph+=dt*sp*2.2;}
- steer(tx,ty,sp,dt,field){const lv=this.lv;if(!lv.clear(this.x,this.y,tx,ty,this.r*.9)){const n=lv.flowStep(field,this.x,this.y);if(n){tx=n[0];ty=n[1];}}this.goto(tx,ty,sp,dt);}
- update(dt){
-  if(this.dead)return;const lv=this.lv;this.hurtT-=dt;this.cd-=dt;
-  if(this.dying){this.fuse-=dt;if(this.fuse<=0){this.dead=true;lv.explosion(this.x,this.y,2.9,this.dmg*2.2);}return;}
-  if(this.type==='boss'){this.updBoss(dt);return;}
-  if(this.stun>0){this.stun-=dt;return;}
-  const p=lv.player,d=lv.daughter,D=DIFFS[S.difficulty];
-  const tp=dst(this.x,this.y,p.x,p.y),td=d.carried?1e9:dst(this.x,this.y,d.x,d.y);
-  let sense=this.sense*D.aware*(p.sprint?1.5:1)*(p.still?.65:1);if(this.hunt)sense=70;
-  const seeP=tp<sense&&(this.hunt||tp<2.5||lv.clear(this.x,this.y,p.x,p.y,.25));
+/* ---------- level flow ---------- */
+const BUILD=[];
+const INTRO=[
+ {t:'HOME DEFENSE',scene:'home',txt:'Night. The power is out and sirens echo down the street. Maya has not come back from the shore. Arjun holds Anaya close and listens — something is moving outside.',tip:'Hold the house for three waves. Keep Anaya near you.'},
+ {t:'THE BLOOM-WIFE',scene:'wife',txt:'Maya came home. She is not herself. The Bloom has taken her body — but somewhere inside, she still knows your name.',tip:'Dodge her charges. A boss that slams a wall is stunned.'},
+ {t:'THE ROAD',scene:'road',txt:'The way to the evacuation point is a graveyard of stalled cars. The infected wander in the dark. Stay quiet. Stay together.',tip:'Sprinting is loud. Standing still makes you harder to notice.'},
+ {t:'SCHOOL SHELTER',scene:'school',txt:'A school turned shelter. Frightened survivors huddle in the dark, and one tired officer guards the door. Hold the line until the convoy comes.',tip:'Survive 60 seconds. The officer will help.'},
+ {t:'FINAL ESCAPE',scene:'bunker',txt:'The military will bomb the coast. The bunker is the only way out. Clear each barricade before the clock runs out — and do not let go of her hand.',tip:'Watch for red markers on the ground — shells are coming.'}];
+function startLevel(i){
+ G.level=i;const D=DIFFS[S.difficulty];
+ G.hp=Math.min(G.maxHp,G.hp+(i>0?25:0));if(i===0&&!G.snap){G.hp=G.maxHp;}
+ G.snap={hp:G.hp,meds:G.meds,infect:G.infect,score:G.score,trust:G.trust};
+ LV=BUILD[i]();state='play';mapBig=false;
+ $('ov').style.display='none';$('hud').style.display='block';ovAnim=null;
+ portraits();Object.keys(cache).forEach(k=>delete cache[k]);
+ $('help').innerHTML='<b>WASD / ARROWS</b> move &nbsp; <b>SPACE</b> attack (or click)<br><b>SHIFT</b> sprint &nbsp; <b>F</b> dodge roll &nbsp; <b>Q</b> medkit<br><b>E</b> carry Anaya &nbsp; <b>M</b> map &nbsp; <b>P</b> pause &nbsp; <b>H</b> hide help';
+ helpShown=i===0?12:5;$('help').style.opacity=1;
+ banner(INTRO[i].t,THEMES[S.theme].acc);say(INTRO[i].tip,4500);
+}
+function levelDone(){G.trust=LV.daughter.trust;unlocked=Math.max(unlocked,G.level+1);try{localStorage.setItem('bloomU2',unlocked);}catch(e){}if(G.level>=4)showEnding();else showShop(G.level+1);}
+function gameOver(msg){state='over';$('hud').style.display='none';
+ showOv(`<div class="ttl" style="font-size:68px;color:#ff4a4a;text-shadow:0 0 40px #f00a">GAME OVER</div><div class="sub" style="color:#7a3a3a">THE BLOOM HAS CONSUMED THEM</div>
+ <div class="txt">${msg||'You could not protect her.'}<br>The infection spreads. Arjun's name is forgotten.</div>
+ <div class="kv"><span>Score</span><b>${G.score}</b><span>Difficulty</span><b>${DIFFS[S.difficulty].name}</b></div>
+ <div class="row"><button class="btn" onclick="retry()">↺ RETRY LEVEL</button><button class="btn" onclick="showMenu()">⌂ MENU</button></div>`,'dead');}
+function retry(){const s=G.snap;if(s){G.hp=s.hp<=0?G.maxHp:s.hp;G.meds=Math.max(s.meds,1);G.infect=s.infect;G.score=s.score;G.trust=s.trust;}startLevel(G.level);}
