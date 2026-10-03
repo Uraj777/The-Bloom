@@ -91,3 +91,20 @@ There is no npm dependency tree or compilation step. Every JavaScript module is 
 ## License
 
 No license has been added yet.
+
+
+## Enhancement layer
+
+The game now includes an additive enhancement layer in `js/09-enhancements.js`, loaded after modules 01–07 and before 08-main.
+
+It adds:
+- richer procedural audio, ambience, footsteps, heartbeat and environmental SFX
+- hit-stop, camera kick, impact rings, flashes and expanded particles
+- enhanced lighting and atmospheric world passes
+- enemy alert/chase feedback and boss cinematics
+- additional props and expanded city-style environments
+- ambient enemy populations for chapters 1, 3 and 5
+- additional pickups and environmental notes
+- soft-failing hooks so the base game can still boot if an optional enhancement is unavailable
+
+**Load order is intentional:** 01 → 02 → 03 → 04 → 05 → 06 → 07 → **09** → 08.
